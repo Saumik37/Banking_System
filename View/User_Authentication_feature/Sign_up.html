@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Sign_Up_Form</title>
+</head>
+<body>
+    <h2 id="formTitle">Sign Up Here!</h2>
+
+    <form>
+        <label>First Name:</label><br>
+        <input type="text" id="firstname" onblur="validateForm()" /><br><br>
+
+        <label>Last Name:</label><br>
+        <input type="text" id="lastname" onblur="validateForm()" /><br><br>
+
+        <label>NID:</label><br>
+        <input type="number" id="nid" onblur="validateForm()" /><br><br>
+
+        <label>Email:</label><br>
+        <input type="text" id="email" onblur="validateForm()" /><br><br>
+
+        <label>Gender:</label><br>
+        <input type="radio" name="gender" id="male" value="Male" onclick="validateForm()"> Male
+        <input type="radio" name="gender" id="female" value="Female" onclick="validateForm()"> Female
+        <input type="radio" name="gender" id="other" value="Other" onclick="validateForm()"> Other <br><br>
+
+        <label>Address:</label><br>
+        <input type="text" id="address" onblur="validateForm()" /><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" id="password" onblur="validateForm()" /><br><br>
+
+        <input type="button" value="Submit" onclick="validateForm()" />
+        <input type="button" value="Reset" onclick="resetForm()" />
+        <p id="error"></p>
+    </form>
+
+    <script>
+        function validateForm() {
+            let fname = document.getElementById('firstname').value.trim();
+            let lname = document.getElementById('lastname').value.trim();
+            let nid = document.getElementById('nid').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let gender = document.querySelector('input[name="gender"]:checked');
+            let address = document.getElementById('address').value.trim();
+            let password = document.getElementById('password').value;
+            let error = document.getElementById('error');
+            let formTitle = document.getElementById('formTitle');
+
+            error.innerHTML = ""; // Reset
+            formTitle.innerHTML = "Registration Form";
+
+            if (fname === "" || lname === "" || nid === "" || email === "" || !gender || address === "" || password === "") {
+                error.innerHTML = "All fields must be filled!";
+                error.style.color = "red";
+                formTitle.innerHTML = "";
+                return false;
+            }
+
+            if (nid.length < 6 || isNaN(nid)) {
+                error.innerHTML = "NID must be at least 6 digits!";
+                error.style.color = "red";
+                formTitle.innerHTML = "";
+                return false;
+            }
+
+            let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            if (!email.match(emailPattern)) {
+                error.innerHTML = "Invalid email format!";
+                error.style.color = "red";
+                formTitle.innerHTML = "";
+                return false;
+            }
+
+            if (password.length < 6) {
+                error.innerHTML = "Password must be at least 6 characters!";
+                error.style.color = "red";
+                formTitle.innerHTML = "";
+                return false;
+            }
+
+            error.innerHTML = "";
+            formTitle.innerHTML = `Welcome, ${fname} ${lname}!`;
+            return true;
+        }
+
+        function resetForm() {
+            document.getElementById('firstname').value = "";
+            document.getElementById('lastname').value = "";
+            document.getElementById('nid').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('address').value = "";
+            document.getElementById('password').value = "";
+
+            // Clear gender selection
+            let genders = document.getElementsByName('gender');
+            for (let i = 0; i < genders.length; i++) {
+                genders[i].checked = false;
+            }
+
+            // Reset title and error message
+            document.getElementById('formTitle').innerHTML = "Registration Form";
+            document.getElementById('error').innerHTML = "";
+        }
+    </script>
+</body>
+</html>
