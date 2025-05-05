@@ -152,8 +152,8 @@
         </div>
         <div class="bottom-section">
             <div class="button-container">
-                <button class="button login-btn" onclick="location.href='Login_Page.html'">Login</button>
-                <button class="button signup-btn" onclick="location.href='SignUp_Page.html'">Signup</button>
+                <a href="/Banking_System/View/Login_Page_Niloy/Login_Page.php" class="button login-btn" style="text-decoration: none; text-align: center;">Login</a>
+                <a href="/Banking_System/View/Form_Validation_feature_Niloy/SignUp_Page.php" class="button signup-btn" style="text-decoration: none; text-align: center;">Signup</a>
             </div>
         </div>
     </div>
@@ -163,16 +163,6 @@
         document.querySelector('.back-btn').addEventListener('click', function() {
             // You can change this to go to a specific page or use history.back()
             history.back();
-        });
-
-        // Login button functionality
-        document.querySelector('.login-btn').addEventListener('click', function() {
-            window.location.href = 'Login_Page.html';
-        });
-
-        // Signup button functionality
-        document.querySelector('.signup-btn').addEventListener('click', function() {
-            window.location.href = 'SignUp_Page.html';
         });
     </script>
 </body>

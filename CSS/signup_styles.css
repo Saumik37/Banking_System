@@ -1,0 +1,221 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    padding: 20px;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 380px;
+    height: 700px; /* Maintained height */
+    background-color: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.header {
+    background-color: #3563E9;
+    padding: 20px;
+    position: relative;
+    height: 130px;
+    border-radius: 0 0 0 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    margin-bottom: px;
+    cursor: pointer;
+    text-decoration: none;
+    background: none;
+    border: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.back-button svg {
+    margin-right: 5px;
+}
+
+.title {
+    color: white;
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 18px;
+}
+
+.help-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    cursor: pointer;
+}
+
+.tooltip {
+    position: absolute;
+    top: 65px;
+    right: 0;
+    background-color: white;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 12px;
+    width: 250px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    display: none;
+}
+
+.tooltip.show {
+    display: block;
+}
+
+.form-container {
+    background-color: #0A1B3D;
+    border-radius: 30px;
+    padding: 25px 22px;
+    margin: -40px 20px 20px;
+    position: relative;
+    z-index: 3;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: white;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.radio-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.radio-option label {
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 10px 0;
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex: 1;
+    text-align: center;
+}
+
+#submitBtn {
+    background-color: #3563E9;
+    color: white;
+}
+
+#submitBtn:hover {
+    background-color: #2953c9;
+}
+
+#resetBtn {
+    background-color: #ff6b6b;
+    color: white;
+}
+
+#resetBtn:hover {
+    background-color: #e74c3c;
+}
+
+#error {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.success-message {
+    color: #2ecc71;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.input-error {
+    border: 1px solid #ff6b6b !important;
+}
