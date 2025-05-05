@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loan Application</title>
+    <link rel="stylesheet" href="loan_application.css">
+</head>
+<body>
+    <h2>Apply for a Loan</h2>
+
+    <form onsubmit="submitLoanApplication(event)">
+        <fieldset>
+            <legend>Loan Application Form</legend>
+
+            <label for="loanType">Loan Type:</label><br>
+            <select id="loanType" required>
+                <option value="">Select</option>
+                <option value="Home">Home Loan</option>
+                <option value="Education">Education Loan</option>
+                <option value="Personal">Personal Loan</option>
+                <option value="Car">Car Loan</option>
+            </select><br><br>
+
+            <label for="loanAmount">Amount:</label><br>
+            <input type="number" id="loanAmount" required><br><br>
+
+            <label for="duration">Duration (in years):</label><br>
+            <input type="number" id="duration" required><br><br>
+
+            <button type="submit">Apply</button>
+        </fieldset>
+    </form>
+
+    <p id="applicationStatus"></p>
+
+    <script src="loan_application.js"></script>
+</body>
+</html>

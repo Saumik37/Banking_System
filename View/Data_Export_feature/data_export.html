@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Export Your Data</title>
+    <link rel="stylesheet" href="data_export.css">
+</head>
+<body>
+    <h2>Export Account Data</h2>
+
+    <fieldset>
+        <legend>Select Format</legend>
+        <label>
+            <input type="radio" name="exportFormat" value="csv" checked> CSV
+        </label>
+        <label>
+            <input type="radio" name="exportFormat" value="json"> JSON
+        </label>
+        <br><br>
+        <button onclick="exportData()">Download</button>
+    </fieldset>
+
+    <script src="data_export.js"></script>
+</body>
+</html>

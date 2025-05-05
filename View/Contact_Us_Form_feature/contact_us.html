@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="contact_us.css">
+</head>
+<body>
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+        <fieldset>
+            <legend>Inquiry Form</legend>
+            <table>
+                <tr>
+                    <td><label for="name">Name:</label></td>
+                    <td><input type="text" id="name" name="name" required></td>
+                </tr>
+                <tr>
+                    <td><label for="email">Email:</label></td>
+                    <td><input type="email" id="email" name="email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="message">Message:</label></td>
+                    <td><textarea id="message" name="message" required></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="captcha">Enter 5 + 3:</label></td>
+                    <td><input type="text" id="captcha" name="captcha" required></td>
+                </tr>
+            </table>
+            <button type="submit">Submit</button>
+        </fieldset>
+    </form>
+    <script src="contact_us.js"></script>
+</body>
+</html>

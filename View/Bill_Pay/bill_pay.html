@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bill Payment</title>
+    <link rel="stylesheet" href="bill_pay.css">
+</head>
+<body>
+    <h2>Pay Your Bills</h2>
+
+    <form onsubmit="payBill(event)">
+        <fieldset>
+            <legend>Bill Payment Form</legend>
+
+            <label for="billType">Bill Type:</label><br>
+            <select id="billType" required>
+                <option value="">Select</option>
+                <option value="Electricity">Electricity</option>
+                <option value="Water">Water</option>
+                <option value="Internet">Internet</option>
+                <option value="Gas">Gas</option>
+            </select><br><br>
+
+            <label for="accountId">Consumer Account ID:</label><br>
+            <input type="text" id="accountId" required><br><br>
+
+            <label for="billAmount">Amount to Pay:</label><br>
+            <input type="number" id="billAmount" required><br><br>
+
+            <button type="submit">Pay Now</button>
+        </fieldset>
+    </form>
+
+    <p id="paymentStatus"></p>
+
+    <script src="bill_pay.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fund Transfer</title>
+    <link rel="stylesheet" href="fund_transfer.css">
+</head>
+<body>
+    <h2>Transfer Funds</h2>
+
+    <form onsubmit="transferFunds(event)">
+        <fieldset>
+            <legend>Recipient Information</legend>
+            <label for="recipientName">Recipient Name:</label><br>
+            <input type="text" id="recipientName" required><br><br>
+
+            <label for="accountNumber">Account Number:</label><br>
+            <input type="text" id="accountNumber" required><br><br>
+
+            <label for="transferAmount">Amount:</label><br>
+            <input type="number" id="transferAmount" required><br><br>
+
+            <button type="submit">Transfer</button>
+        </fieldset>
+    </form>
+
+    <p id="transferStatus"></p>
+
+    <script src="fund_transfer.js"></script>
+</body>
+</html>

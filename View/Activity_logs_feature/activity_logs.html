@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activity Logs</title>
+    <link rel="stylesheet" href="activity_logs.css">
+</head>
+<body>
+    <h2>User Activity Logs</h2>
+
+    <fieldset>
+        <legend>Filter Logs</legend>
+        <label for="userFilter">User:</label>
+        <input type="text" id="userFilter" placeholder="Enter username">
+        
+        <label for="actionFilter">Action:</label>
+        <input type="text" id="actionFilter" placeholder="Enter action type">
+
+        <button onclick="filterLogs()">Apply Filter</button>
+    </fieldset>
+
+    <table id="logTable" border="1">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Action</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Logs will be populated here -->
+        </tbody>
+    </table>
+
+    <button onclick="exportLogs()">Export Logs</button>
+
+    <script src="activity_logs.js"></script>
+</body>
+</html>

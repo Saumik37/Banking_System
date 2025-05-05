@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interest Calculator</title>
+    <link rel="stylesheet" href="interest_calculator.css">
+</head>
+<body>
+    <h2>Interest Calculator</h2>
+
+    <form onsubmit="calculateInterest(event)">
+        <fieldset>
+            <legend>Enter Details</legend>
+
+            <label for="principal">Principal Amount ($):</label><br>
+            <input type="number" id="principal" required><br><br>
+
+            <label for="rate">Interest Rate (% per year):</label><br>
+            <input type="number" id="rate" required><br><br>
+
+            <label for="time">Time (years):</label><br>
+            <input type="number" id="time" required><br><br>
+
+            <button type="submit">Calculate</button>
+        </fieldset>
+    </form>
+
+    <p id="interestResult"></p>
+
+    <script src="interest_calculator.js"></script>
+</body>
+</html>
