@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Card Management</title>
+    <link rel="stylesheet" href="../../CSS/card_management.css">
+</head>
+<body>
+    <h1>Card Management Portal</h1>
+    <div>
+        <h2>Welcome, User!</h2>
+        <p>Manage your cards and set preferences for alerts and controls.</p>
+    </div>                         
+    <div class="tab-container">
+        <div class="tabs">
+            <button class="tab-button active" data-tab="card-controls">Card Controls</button>
+            <button class="tab-button" data-tab="pin-changer">PIN Changer</button>
+            <button class="tab-button" data-tab="fraud-alerts">Fraud Alerts</button>
+        </div>
+        
+        <div class="tab-content active" id="card-controls">
+            <h2>Card Controls</h2>
+            
+            <div class="card-list">
+                <div class="card-item">
+                    <div class="card-details">
+                        <h3>Visa Platinum **** 5678</h3>
+                        <p>Exp: 09/28</p>
+                        <div class="card-status active">Active</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="freeze-btn">Temporarily Freeze</button>
+                        <button class="report-btn">Report Lost/Stolen</button>
+                        <button class="limits-btn">Set Spending Limits</button>
+                    </div>
+                </div>
+                
+                <div class="card-item">
+                    <div class="card-details">
+                        <h3>Mastercard Gold **** 9012</h3>
+                        <p>Exp: 03/27</p>
+                        <div class="card-status frozen">Frozen</div>
+                    </div>
+                    <div class="card-actions">
+                        <button class="unfreeze-btn">Unfreeze Card</button>
+                        <button class="report-btn">Report Lost/Stolen</button>
+                        <button class="limits-btn">Set Spending Limits</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Spending Limits Modal -->
+            <div id="spending-limits-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Set Spending Limits</h3>
+                    <p>Card: <span id="limit-card-name">Visa Platinum **** 5678</span></p>
+                    
+                    <form id="spending-limits-form">
+                        <div class="form-group">
+                            <label for="dining-limit">Dining:</label>
+                            <input type="number" id="dining-limit" placeholder="Enter amount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="retail-limit">Retail:</label>
+                            <input type="number" id="retail-limit" placeholder="Enter amount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="travel-limit">Travel:</label>
+                            <input type="number" id="travel-limit" placeholder="Enter amount" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="online-limit">Online Shopping:</label>
+                            <input type="number" id="online-limit" placeholder="Enter amount" min="0">
+                        </div>
+                        <button type="submit" class="submit-btn">Save Limits</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Report Card Modal -->
+            <div id="report-card-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h3>Report Lost or Stolen Card</h3>
+                    <p>Card: <span id="report-card-name">Visa Platinum **** 5678</span></p>
+                    
+                    <form id="report-card-form">
+                        <div class="form-group">
+                            <label for="report-reason">Reason:</label>
+                            <select id="report-reason">
+                                <option value="lost">Lost</option>
+                                <option value="stolen">Stolen</option>
+                                <option value="damaged">Damaged</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="report-details">Additional Details:</label>
+                            <textarea id="report-details" rows="4" placeholder="Please provide any relevant details"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="replacement">Request Replacement?</label>
+                            <input type="checkbox" id="replacement" checked>
+                        </div>
+                        <button type="submit" class="submit-btn">Submit Report</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="pin-changer">
+            <h2>PIN Changer</h2>
+            
+            <div class="pin-changer-container">
+                <form id="pin-change-form">
+                    <div class="form-group">
+                        <label for="card-select">Select Card:</label>
+                        <select id="card-select">
+                            <option value="visa-5678">Visa Platinum **** 5678</option>
+                            <option value="mc-9012">Mastercard Gold **** 9012</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="current-pin">Current PIN:</label>
+                        <input type="password" id="current-pin" maxlength="4" placeholder="Enter current PIN">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-pin">New PIN:</label>
+                        <input type="password" id="new-pin" maxlength="4" placeholder="Enter new PIN">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-pin">Confirm New PIN:</label>
+                        <input type="password" id="confirm-pin" maxlength="4" placeholder="Confirm new PIN">
+                    </div>
+                    <div class="pin-guidelines">
+                        <h4>PIN Guidelines:</h4>
+                        <ul>
+                            <li>Must be 4 digits</li>
+                            <li>Cannot be sequential numbers (e.g., 1234)</li>
+                            <li>Cannot be four identical digits (e.g., 1111)</li>
+                            <li>Cannot be your birth year</li>
+                        </ul>
+                    </div>
+                    <button type="submit" class="submit-btn">Change PIN</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="fraud-alerts">
+            <h2>Fraud Alerts</h2>
+            
+            <div class="alert-preferences">
+                <h3>Alert Preferences</h3>
+                <form id="alert-preferences-form">
+                    <div class="form-group">
+                        <label for="notification-method">Notification Method:</label>
+                        <select id="notification-method">
+                            <option value="email">Email</option>
+                            <option value="sms">SMS</option>
+                            <option value="push">Push Notification</option>
+                            <option value="all">All Methods</option>
+                        </select>
+                    </div>
+                    
+                    <h4>Notify me when:</h4>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="international-transactions" checked>
+                            <label for="international-transactions">International transactions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="large-purchases" checked>
+                            <label for="large-purchases">Purchases over $500</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="online-purchases" checked>
+                            <label for="online-purchases">Online purchases</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="declined-transactions" checked>
+                            <label for="declined-transactions">Declined transactions</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="gas-station-purchases">
+                            <label for="gas-station-purchases">Gas station purchases</label>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Save Preferences</button>
+                </form>
+            </div>
+            
+            <div class="recent-alerts">
+                <h3>Recent Alerts</h3>
+                <table id="alertsTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Card</th>
+                            <th>Alert Type</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2025-05-15</td>
+                            <td>Visa Platinum **** 5678</td>
+                            <td class="alert-high">Suspicious Activity</td>
+                            <td>International transaction detected in France</td>
+                            <td><button class="resolve-btn">Resolve</button></td>
+                        </tr>
+                        <tr>
+                            <td>2025-05-14</td>
+                            <td>Mastercard Gold **** 9012</td>
+                            <td class="alert-medium">Large Purchase</td>
+                            <td>Transaction of $750 at Electronics Store</td>
+                            <td><button class="resolve-btn">Resolve</button></td>
+                        </tr>
+                        <tr>
+                            <td>2025-05-10</td>
+                            <td>Visa Platinum **** 5678</td>
+                            <td class="alert-low">Unusual Time</td>
+                            <td>Transaction at 3:15 AM at Gas Station</td>
+                            <td><button class="resolved-btn" disabled>Resolved</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 Card Management Portal. All rights reserved.</p>
+        <p>For assistance, contact customer.</p>
+    </footer>       
+    <div><button class="back-btn">Back</button></div>         
+
+    <script src="../../JS/card_management.js"></script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cheque Deposit</title>
+    <link rel="stylesheet" href="../../CSS/cheque_deposit.css">
+</head>
+<body>
+    <div class="header">
+        <h1>Cheque Deposit</h1>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="progress-container">
+        <div class="progress-step">
+            <div class="step-circle active" id="step1Circle">1</div>
+            <span class="step-label active" id="step1Label">Capture</span>
+        </div>
+        <div class="progress-line">
+            <div class="line" id="line1"></div>
+        </div>
+        <div class="progress-step">
+            <div class="step-circle" id="step2Circle">2</div>
+            <span class="step-label" id="step2Label">Endorse</span>
+        </div>
+        <div class="progress-line">
+            <div class="line" id="line2"></div>
+        </div>
+        <div class="progress-step">
+            <div class="step-circle" id="step3Circle">3</div>
+            <span class="step-label" id="step3Label">Confirm</span>
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="content-area">
+        <!-- Step 1: Check Capture -->
+        <div id="step1Content" class="step-content active">
+            <h2>Capture Cheque Images</h2>
+            
+            <div class="capture-container">
+                <h3>Front of Cheque</h3>
+                <div class="image-capture" id="frontCaptureArea">
+                    <div class="capture-placeholder" id="frontCapturePlaceholder">
+                        <span class="camera-icon">📷</span>
+                        <span>Tap to capture</span>
+                    </div>
+                    <div class="captured-image-container" id="frontImageContainer">
+                        <img id="frontImage" class="captured-image" src="" alt="Front of cheque">
+                        <button id="retakeFrontBtn" class="retake-button">↺</button>
+                        <div class="amount-detection" id="amountDetection">
+                            <span>Detected amount:</span>
+                            <span id="detectedAmount"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="capture-container">
+                <h3>Back of Cheque</h3>
+                <div class="image-capture" id="backCaptureArea">
+                    <div class="capture-placeholder" id="backCapturePlaceholder">
+                        <span class="camera-icon">📷</span>
+                        <span id="backCaptureText">Capture front first</span>
+                    </div>
+                    <div class="captured-image-container" id="backImageContainer">
+                        <img id="backImage" class="captured-image" src="" alt="Back of cheque">
+                        <button id="retakeBackBtn" class="retake-button">↺</button>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="continueToStep2" class="continue-button disabled">Continue</button>
+        </div>
+
+        <!-- Step 2: Endorsement Guide -->
+        <div id="step2Content" class="step-content">
+            <h2>Endorsement Guide</h2>
+            
+            <div class="guide-container">
+                <div class="info-box">
+                    <div class="info-header">
+                        <span class="info-icon">ℹ️</span>
+                        <p>Please make sure your cheque is properly endorsed on the back before submitting:</p>
+                    </div>
+                </div>
+                
+                <div class="requirements-box">
+                    <h3>Endorsement Requirements:</h3>
+                    <ul class="requirements-list">
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <span>Sign the back of the cheque where indicated</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <span>Write "For Mobile Deposit Only" below your signature</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="guidelines-box">
+                    <h3>Image Guidelines:</h3>
+                    <ul class="guidelines-list">
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <span>Ensure the entire cheque is visible in the frame</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <span>Take photos in a well-lit area on a dark background</span>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <span>Make sure all details are clear and readable</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="backToStep1" class="back-button">Back</button>
+                <button id="continueToStep3" class="continue-button">Continue</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Deposit Confirmation -->
+        <div id="step3Content" class="step-content">
+            <h2>Deposit Confirmation</h2>
+            
+            <div class="confirmation-container">
+                <h3>Deposit Details</h3>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Date & Time:</span>
+                    <span class="detail-value" id="depositDate"></span>
+                </div>
+                
+                <div class="images-row">
+                    <span class="detail-label">Cheque Images:</span>
+                    <div class="thumbnail-container">
+                        <div class="thumbnail">
+                            <img id="frontThumbnail" src="" alt="Front of cheque">
+                            <span>Front</span>
+                        </div>
+                        <div class="thumbnail">
+                            <img id="backThumbnail" src="" alt="Back of cheque">
+                            <span>Back</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button id="backToStep2" class="back-button">Back</button>
+                <button id="submitDeposit" class="continue-button">Submit Deposit</button>
+            </div>
+        </div>
+
+        <!-- Deposit Status Screen -->
+        <div id="statusScreen" class="status-screen">
+            <div id="processingStatus" class="status-content">
+                <div class="spinner"></div>
+                <h2>Processing Your Deposit</h2>
+                <p>Please wait while we process your deposit. This may take a moment.</p>
+            </div>
+            
+            <div id="successStatus" class="status-content">
+                <div class="success-icon">✓</div>
+                <h2>Deposit Successful!</h2>
+                <p>Your cheque deposit has been successfully processed.</p>
+                
+                <div class="transaction-details">
+                    <h3>Transaction Details:</h3>
+                    <div class="transaction-row">
+                        <span>Reference:</span>
+                        <span id="referenceNumber"></span>
+                    </div>
+                </div>
+                
+                <button id="doneButton" class="done-button">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../JS/cheque_deposit.js"></script>
+</body>
+</html>
