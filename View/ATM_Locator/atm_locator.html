@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ATM Locator</title>
+    <link rel="stylesheet" href="../../CSS/atm_locator.css">
+</head>
+<body>
+    <h2>ATM Locator</h2>
+
+    <fieldset>
+        <legend>Find ATMs Near You</legend>
+        <label for="locationInput">Location:</label>
+        <input type="text" id="locationInput" placeholder="Enter area in Bangladesh">
+        
+        <label for="radiusSelect">Radius:</label>
+        <select id="radiusSelect">
+            <option value="1">1 mile</option>
+            <option value="5" selected>5 miles</option>
+            <option value="10">10 miles</option>
+            <option value="25">25 miles</option>
+        </select>
+
+        <button onclick="findATMs()">Search</button>
+    </fieldset>
+
+    <fieldset>
+        <legend>Filters</legend>
+        <input type="checkbox" id="surchargeFilter" checked>
+        <label for="surchargeFilter">Surcharge-Free ATMs</label>
+        
+        <input type="checkbox" id="accessibleFilter">
+        <label for="accessibleFilter">Wheelchair Accessible</label>
+        
+        <input type="checkbox" id="openNowFilter">
+        <label for="openNowFilter">Open Now</label>
+    </fieldset>
+
+    <div id="mapContainer">
+        <!-- Map will be displayed here -->
+        <div id="map"></div>
+    </div>
+
+    <div id="atmListContainer">
+        <h3>Nearby ATMs</h3>
+        <table id="atmTable" border="1">
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Distance</th>
+                    <th>Fees</th>
+                    <th>Hours</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ATM listings will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="atmDetailPanel" class="hidden">
+        <button id="backButton" onclick="hideDetails()">Back to List</button>
+        <h3 id="atmName">ATM Details</h3>
+        <p id="atmAddress"></p>
+        <div id="atmHours"></div>
+        <div id="atmFeatures"></div>
+        <button onclick="getDirections()">Get Directions</button>
+    </div>
+
+    <div><button id="back-btn" class="back-btn">Back</button></div>
+
+    <script src="../../JS/atm_locator.js"></script>
+</body>
+</html>
