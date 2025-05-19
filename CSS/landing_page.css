@@ -1,0 +1,156 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2, h3 {
+    font-family: 'Arial', sans-serif;
+    color: #1976d2;
+}
+
+/* Header Section */
+header {
+    background-color: #1976d2;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2.5em;
+}
+
+nav a {
+    color: white;
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Hero Section */
+#hero {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #ffffff;
+    margin-bottom: 20px;
+}
+
+#hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+#hero p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+}
+
+#hero button {
+    padding: 12px 30px;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+#hero button:hover {
+    background-color: #125a9c;
+}
+
+/* Core Features Section */
+#features {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #ffffff;
+}
+
+#features h2 {
+    margin-bottom: 40px;
+}
+
+#features .feature {
+    display: inline-block;
+    width: 30%;
+    margin: 0 10px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#features .feature h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#features .feature p {
+    font-size: 1em;
+}
+
+/* Contact Section */
+#contact {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #ffffff;
+}
+
+#contact h2 {
+    margin-bottom: 20px;
+}
+
+#contact p {
+    font-size: 1.1em;
+}
+
+/* Footer */
+footer {
+    background-color: #1976d2;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+footer p {
+    font-size: 1em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    #hero h1 {
+        font-size: 2.5em;
+    }
+
+    #hero p {
+        font-size: 1em;
+    }
+
+    #features .feature {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    #features h2 {
+        font-size: 1.8em;
+        margin-bottom: 30px;
+    }
+}

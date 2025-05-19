@@ -1,37 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Form Validation</title>
-    <link rel="stylesheet" href="form_validation.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Validation - Login/Registration</title>
+    <link rel="stylesheet" href="../../CSS/form_validation.css">
 </head>
 <body>
-    <h2>Register Account</h2>
-    <form id="validationForm">
+    <h2>Banking System - Login / Register</h2>
+    
+    <!-- Toggle Buttons for Login/Signup -->
+    <div class="tab-buttons">
+        <button type="button" onclick="showForm('login')">Login</button>
+        <button type="button" onclick="showForm('register')">Register</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="login-form" class="form hidden" onsubmit="return validateLogin()">
         <fieldset>
-            <legend>Signup Form</legend>
-            <table>
-                <tr>
-                    <td><label for="username">Username:</label></td>
-                    <td><input type="text" id="username" name="username" required></td>
-                </tr>
-                <tr>
-                    <td><label for="email">Email:</label></td>
-                    <td><input type="email" id="email" name="email" required></td>
-                </tr>
-                <tr>
-                    <td><label for="password">Password:</label></td>
-                    <td><input type="password" id="password" name="password" required></td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <span id="errorMsg" style="color:red;"></span>
-                    </td>
-                </tr>
-            </table>
-            <button type="submit">Register</button>
+            <legend>Login</legend>
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" name="username" required><br>
+
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="password" required><br>
+
+            <input type="submit" value="Login">
         </fieldset>
     </form>
 
-    <script src="form_validation.js"></script>
+    <!-- Register Form -->
+    <form id="register-form" class="form hidden" onsubmit="return validateRegister()">
+        <fieldset>
+            <legend>Register</legend>
+            <label for="reg-username">Username:</label>
+            <input type="text" id="reg-username" name="username" required><br>
+
+            <label for="reg-email">Email:</label>
+            <input type="email" id="reg-email" name="email" required><br>
+
+            <label for="reg-password">Password:</label>
+            <input type="password" id="reg-password" name="password" required><br>
+
+            <label for="reg-confirm">Confirm Password:</label>
+            <input type="password" id="reg-confirm" name="confirm" required><br>
+
+            <input type="submit" value="Register">
+        </fieldset>
+    </form>
+
+    <script src="../../JS/form_validation.js"></script>
 </body>
 </html>

@@ -4,104 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banking System</title>
+    <link rel="stylesheet" href="../../CSS/landing_page.css"> <!-- Ensure correct path -->
 </head>
 <body>
     <!-- Header Section -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="10">
-        <tr>
-            <td>
-                <table width="80%" border="0" cellspacing="0" cellpadding="0" align="center">
-                    <tr>
-                        <td><h1>Banking System</h1></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <table border="0" cellspacing="0" cellpadding="5">
-                                <tr>
-                                    <td><a href="#features">Features</a></td>
-                                    <td><a href="#contact">Contact</a></td>
-                                    <td><a href="login.html">Login</a></td>
-                                    <td><a href="signup.html">Sign Up</a></td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <div class="header">
+        <h1>Banking System</h1>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#contact">Contact</a>
+            <button onclick="location.href='/View/login_register.html'">Login</button> <!-- Login button -->
+            <button onclick="location.href='/View/login_register.html'">Sign Up</button> <!-- Sign Up button -->
+        </nav>
+    </div>
 
     <!-- Hero Section -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="20" id="hero">
-        <tr>
-            <td align="center">
-                <table width="80%" border="0" cellspacing="0" cellpadding="10">
-                    <tr>
-                        <td align="center"><h1>Banking Made Simple</h1></td>
-                    </tr>
-                    <tr>
-                        <td align="center"><p>Secure, fast, and convenient online banking solutions.</p></td>
-                    </tr>
-                    <tr>
-                        <td align="center">
-                            <button onclick="location.href='signup.html'">Get Started</button>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <div class="hero" id="hero">
+        <h1>Banking Made Simple</h1>
+        <p>Secure, fast, and convenient online banking solutions.</p>
+        <button onclick="location.href='login_register.html'">Get Started</button>
+    </div>
 
     <!-- Features Section -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="20" id="features">
-        <tr>
-            <td>
-                <table width="80%" border="0" cellspacing="0" cellpadding="10" align="center">
-                    <tr>
-                        <td colspan="3"><h2>Core Features</h2></td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-                            <h3>Easy Transfers</h3>
-                            <p>Transfer funds between accounts or to other banks.</p>
-                        </td>
-                        <td valign="top">
-                            <h3>Bill Payments</h3>
-                            <p>Pay your bills on time with scheduled payment options.</p>
-                        </td>
-                        <td valign="top">
-                            <h3>Secure Banking</h3>
-                            <p>Rest easy with our security measures protecting your accounts.</p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <section id="features">
+        <h2>Core Features</h2>
+        <div class="feature">
+            <h3>Easy Transfers</h3>
+            <p>Transfer funds between accounts or to other banks.</p>
+        </div>
+        <div class="feature">
+            <h3>Bill Payments</h3>
+            <p>Pay your bills on time with scheduled payment options.</p>
+        </div>
+        <div class="feature">
+            <h3>Secure Banking</h3>
+            <p>Rest easy with our security measures protecting your accounts.</p>
+        </div>
+    </section>
 
     <!-- Contact Section -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="20" id="contact">
-        <tr>
-            <td>
-                <table width="80%" border="0" cellspacing="0" cellpadding="10" align="center">
-                    <tr>
-                        <td><h2>Contact Us</h2></td>
-                    </tr>
-                    <tr>
-                        <td>Email: support@bankingsystem.com</td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
+    <section id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: support@bankingsystem.com</p>
+    </section>
 
     <!-- Footer -->
-    <table width="100%" border="0" cellspacing="0" cellpadding="10">
-        <tr>
-            <td align="center">
-                <p>Banking System - 2025</p>
-            </td>
-        </tr>
-    </table>
+    <footer>
+        <p>Banking System - 2025</p>
+    </footer>
+
+    <script src="../../JS/landing_page.js"></script> <!-- Ensure correct path -->
 </body>
 </html>
