@@ -1,6 +1,6 @@
 /**
  * Signup Form JavaScript
- * Handles form validation, tooltips, and reset functionality
+ * Handles form validation, tooltips, and form submission
  */
 
 // Wait for DOM to fully load
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addressInput = document.getElementById('address');
     const passwordInput = document.getElementById('password');
     const resetBtn = document.getElementById('resetBtn');
+    const submitBtn = document.getElementById('submitBtn');
     const errorMsg = document.getElementById('error');
     
     // Help icon tooltip
@@ -28,34 +29,43 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function initializeEventListeners() {
         // Toggle tooltip on help icon click
-        helpIcon.addEventListener('click', function() {
-            tooltip.classList.toggle('show');
-        });
-        
-        // Hide tooltip when clicking elsewhere
-        document.addEventListener('click', function(event) {
-            if (!helpIcon.contains(event.target)) {
-                tooltip.classList.remove('show');
-            }
-        });
+        if (helpIcon && tooltip) {
+            helpIcon.addEventListener('click', function() {
+                tooltip.classList.toggle('show');
+            });
+            
+            // Hide tooltip when clicking elsewhere
+            document.addEventListener('click', function(event) {
+                if (!helpIcon.contains(event.target)) {
+                    tooltip.classList.remove('show');
+                }
+            });
+        }
 
         // Add validation to form fields
         const inputs = [firstnameInput, lastnameInput, nidInput, emailInput, addressInput, passwordInput];
         inputs.forEach(input => {
-            // Validate on blur (when field loses focus)
-            input.addEventListener('blur', function() {
-                validateField(this);
-            });
-            
-            // Clear error styling on input
-            input.addEventListener('input', function() {
-                this.classList.remove('input-error');
-                if (errorMsg) errorMsg.textContent = '';
-            });
+            if (input) {
+                // Validate on blur (when field loses focus)
+                input.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                
+                // Clear error styling on input
+                input.addEventListener('input', function() {
+                    this.classList.remove('input-error');
+                    if (errorMsg) errorMsg.textContent = '';
+                });
+            }
         });
 
         // Reset button event
-        resetBtn.addEventListener('click', resetForm);
+        if (resetBtn) {
+            resetBtn.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent form submission
+                resetForm();
+            });
+        }
     }
 
     /**
@@ -64,6 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
      * @returns {boolean} - Whether the field is valid
      */
     function validateField(field) {
+        if (!field) return false;
+        
         const value = field.value.trim();
         
         // Reset error state
@@ -116,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Validate each field
         inputs.forEach(input => {
-            if (!validateField(input)) {
+            if (input && !validateField(input)) {
                 isValid = false;
             }
         });
@@ -125,15 +137,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const genders = document.getElementsByName('gender');
         let genderSelected = false;
         
-        genders.forEach(gender => {
-            if (gender.checked) {
-                genderSelected = true;
+        if (genders.length > 0) {
+            genders.forEach(gender => {
+                if (gender.checked) {
+                    genderSelected = true;
+                }
+            });
+            
+            if (!genderSelected) {
+                if (errorMsg) errorMsg.textContent = 'Please select your gender!';
+                isValid = false;
             }
-        });
-        
-        if (!genderSelected) {
-            if (errorMsg) errorMsg.textContent = 'Please select your gender!';
-            isValid = false;
         }
         
         return isValid;
@@ -147,8 +161,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Clear input values and remove error styling
         inputs.forEach(input => {
-            input.value = '';
-            input.classList.remove('input-error');
+            if (input) {
+                input.value = '';
+                input.classList.remove('input-error');
+            }
         });
         
         // Clear gender selection
@@ -166,9 +182,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add form submission validation
     if (form) {
         form.addEventListener('submit', function(event) {
+            // Validate the form first
             if (!validateForm()) {
-                event.preventDefault();
+                event.preventDefault(); // Prevent form submission if validation fails
+                return false;
             }
+            
+            // Display loading or processing message if needed
+            const successMsg = document.getElementById('success');
+            if (successMsg) {
+                successMsg.textContent = 'Processing your request...';
+                successMsg.classList.add('success-message');
+            }
+            
+            // Allow the form to submit normally
+            // The PHP signup_process.php script will handle the data processing
+            // and redirect to Login_Page.php after successful signup
+            return true;
         });
     }
 });

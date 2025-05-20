@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <title>Explore Page</title>
@@ -76,7 +77,7 @@
             text-align: center;
             width: 75%;
             margin: 0 auto;
-            margin-top: 35px; /* Increased to move text down and separate from back button */
+            margin-top: 35px;
         }
 
         .bottom-section {
@@ -108,6 +109,8 @@
             font-size: 14px;
             transition: all 0.2s;
             margin-bottom: 15px;
+            display: inline-block;
+            text-align: center;
         }
 
         .login-btn {
@@ -152,8 +155,8 @@
         </div>
         <div class="bottom-section">
             <div class="button-container">
-                <a href="/Banking_System/View/Login_Page_Niloy/Login_Page.php" class="button login-btn" style="text-decoration: none; text-align: center;">Login</a>
-                <a href="/Banking_System/View/Form_Validation_feature_Niloy/SignUp_Page.php" class="button signup-btn" style="text-decoration: none; text-align: center;">Signup</a>
+                <a href="javascript:void(0)" id="login-button" class="button login-btn">Login</a>
+                <a href="javascript:void(0)" id="signup-button" class="button signup-btn">Signup</a>
             </div>
         </div>
     </div>
@@ -163,6 +166,18 @@
         document.querySelector('.back-btn').addEventListener('click', function() {
             // You can change this to go to a specific page or use history.back()
             history.back();
+        });
+        
+        // Login button functionality
+        document.getElementById('login-button').addEventListener('click', function() {
+            // Navigate to login page - using the correct path based on your project structure
+            window.location.href = 'Login_Page.php';
+        });
+        
+        // Signup button functionality
+        document.getElementById('signup-button').addEventListener('click', function() {
+            // Navigate to signup page - this uses your existing path
+            window.location.href = '../Form_Validation_feature_Niloy/SignUp_Page.php';
         });
     </script>
 </body>

@@ -1,102 +1,95 @@
 <?php
-// Initialize variables for form data and errors
-$firstname = $lastname = $nid = $email = $gender = $address = $password = "";
-$error = "";
-$success = "";
+// signup_process.php - Handles user registration
+session_start();
 
-// Process form data when form is submitted
+// Validate and sanitize input
+function validateInput($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+// Main process
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate and sanitize inputs
-    $firstname = trim($_POST["firstname"]);
-    $lastname = trim($_POST["lastname"]);
-    $nid = trim($_POST["nid"]);
-    $email = trim($_POST["email"]);
+    // Get form data
+    $firstname = validateInput($_POST["firstname"]);
+    $lastname = validateInput($_POST["lastname"]);
+    $nid = validateInput($_POST["nid"]);
+    $email = validateInput($_POST["email"]);
+    $address = validateInput($_POST["address"]);
+    $password = $_POST["password"];
     $gender = isset($_POST["gender"]) ? $_POST["gender"] : "";
-    $address = trim($_POST["address"]);
-    $password = trim($_POST["password"]);
     
-    // Validation
-    $isValid = true;
+    // Validate data
+    $error = "";
     
     if (empty($firstname)) {
         $error = "First name is required!";
-        $isValid = false;
-    }
-    
-    if (empty($lastname)) {
+    } elseif (empty($lastname)) {
         $error = "Last name is required!";
-        $isValid = false;
-    }
-    
-    if (empty($nid)) {
+    } elseif (empty($nid)) {
         $error = "NID is required!";
-        $isValid = false;
-    } elseif (strlen($nid) != 10 || !is_numeric($nid)) {
+    } elseif (strlen($nid) !== 10 || !is_numeric($nid)) {
         $error = "NID must be exactly 10 digits!";
-        $isValid = false;
-    }
-    
-    if (empty($email)) {
+    } elseif (empty($email)) {
         $error = "Email is required!";
-        $isValid = false;
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = "Please enter a valid email address!";
-        $isValid = false;
-    }
-    
-    if (empty($gender)) {
-        $error = "Please select your gender!";
-        $isValid = false;
-    }
-    
-    if (empty($address)) {
+        $error = "Invalid email format!";
+    } elseif (empty($address)) {
         $error = "Address is required!";
-        $isValid = false;
-    }
-    
-    if (empty($password)) {
+    } elseif (empty($password)) {
         $error = "Password is required!";
-        $isValid = false;
     } elseif (strlen($password) < 6) {
         $error = "Password must be at least 6 characters!";
-        $isValid = false;
+    } elseif (empty($gender)) {
+        $error = "Please select your gender!";
     }
     
-    // If all validations pass
-    if ($isValid) {
-        // Here you would typically:
-        // 1. Hash the password
-        // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        
-        // 2. Connect to database and store the user data
-        // Database connection code would go here
-        // Insert user data into database
-        
-        // For this example, we'll just show success and redirect
-        $success = "Account created successfully!";
-        
-        // Redirect to login page with success message
-        header("Location: Login_Page.php?success=" . urlencode($success));
-        exit();
-    } else {
-        // Create query string with form data for repopulation
-        $query = http_build_query([
-            'error' => $error,
-            'firstname' => $firstname,
-            'lastname' => $lastname,
-            'nid' => $nid,
-            'email' => $email,
-            'gender' => $gender,
-            'address' => $address
-        ]);
-        
-        // Redirect back to signup page with error
-        header("Location: Signup_Page.php?" . $query);
+    // If there's a validation error, redirect back with error message
+    if (!empty($error)) {
+        header("Location: ../View/Form_Validation_feature_Niloy/Signup_Page.php?error=" . urlencode($error));
         exit();
     }
+    
+    // Create users array in session if it doesn't exist
+    if (!isset($_SESSION['users'])) {
+        $_SESSION['users'] = array();
+    }
+    
+    // Check if email already exists
+    foreach ($_SESSION['users'] as $user) {
+        if ($user['email'] === $email) {
+            header("Location: ../View/Form_Validation_feature_Niloy/Signup_Page.php?error=" . urlencode("Email already exists!"));
+            exit();
+        }
+    }
+    
+    // Hash password for security
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+    // Create new user
+    $new_user = [
+        'id' => uniqid(),
+        'firstname' => $firstname,
+        'lastname' => $lastname,
+        'nid' => $nid,
+        'email' => $email,
+        'address' => $address,
+        'password' => $hashed_password,
+        'gender' => $gender
+    ];
+    
+    // Add user to session
+    $_SESSION['users'][] = $new_user;
+    
+    // Redirect to login page with success message
+    header("Location: ../View/Login_page_Niloy/Login_Page.php?success=" . urlencode("Registration successful! Please login."));
+    exit();
+    
 } else {
     // If not a POST request, redirect to signup page
-    header("Location: Signup_Page.php");
+    header("Location: ../View/Form_Validation_feature_Niloy/Signup_Page.php");
     exit();
 }
 ?>

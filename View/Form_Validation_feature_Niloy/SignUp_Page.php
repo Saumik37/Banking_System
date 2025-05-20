@@ -8,7 +8,7 @@
     <div class="main-container">
         <div class="header">
             <div class="header-content">
-                <button class="back-button" onclick="location.href='Explore_Page.html'">
+                <button class="back-button" onclick="location.href='../Login_page_Niloy/Explore_Page.html'">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 12H5"></path>
                         <path d="M12 19l-7-7 7-7"></path>
@@ -30,7 +30,8 @@
         </div>
         
         <div class="form-container">
-            <form id="signupForm" method="post" action="/Banking_System/Controller/signup_process.php">
+            <!-- Fixed form action path -->
+            <form id="signupForm" method="post" action="/Banking_System/Controller/signup_process.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="firstname">First Name:</label>
                     <input type="text" id="firstname" name="firstname" placeholder="Type here..." value="<?php echo isset($_GET['firstname']) ? htmlspecialchars($_GET['firstname']) : ''; ?>" />

@@ -1,58 +1,86 @@
 <?php
-// Initialize variables
-$email = $password = "";
-$error = "";
+// login_process.php - Controller for processing login data using only sessions
+session_start();
 
-// Process form data when form is submitted
+// Validate and sanitize input
+function validateInput($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+// Main process
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validate and sanitize inputs
-    $email = trim($_POST["email"]);
-    $password = trim($_POST["password"]);
+    // Get form data
+    $email = validateInput($_POST["email"]);
+    $password = $_POST["password"];
     
-    // Validation
-    $isValid = true;
+    // Validate data
+    $error = "";
     
     if (empty($email)) {
-        $error = "Please enter email or phone number";
-        $isValid = false;
-    } else {
-        // Check if email is valid
-        $emailPattern = "/^[^ ]+@[^ ]+\.[a-z]{2,3}$/";
-        $phonePattern = "/^\d{10}$/";
-        
-        if (!preg_match($emailPattern, $email) && !preg_match($phonePattern, $email)) {
-            $error = "Please enter a valid email or phone number";
-            $isValid = false;
+        $error = "Email is required!";
+    } elseif (empty($password)) {
+        $error = "Password is required!";
+    }
+    
+    // If there's a validation error, redirect back with error message
+    if (!empty($error)) {
+        header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode($error) . "&email=" . urlencode($email));
+        exit();
+    }
+    
+    // Check if users array exists in session
+    if (!isset($_SESSION['users'])) {
+        header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("No users found. Please sign up first.") . "&email=" . urlencode($email));
+        exit();
+    }
+    
+    // Search for matching user
+    $user_found = false;
+    $current_user = null;
+    
+    foreach ($_SESSION['users'] as $user) {
+        if ($user['email'] === $email) {
+            // Check password
+            if (password_verify($password, $user['password'])) {
+                $user_found = true;
+                $current_user = $user;
+                break;
+            } else {
+                // Email found but password incorrect
+                header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("Incorrect password!") . "&email=" . urlencode($email));
+                exit();
+            }
         }
     }
     
-    if (empty($password)) {
-        $error = "Please enter password";
-        $isValid = false;
-    } elseif (strlen($password) < 6) {
-        $error = "Password must be at least 6 characters";
-        $isValid = false;
-    }
-    
-    // If all validations pass
-    if ($isValid) {
-        // Here you would typically:
-        // 1. Connect to database and check user credentials
-        // 2. Set session variables if login is successful
+    if ($user_found) {
+        // Set session variables for logged in user - FIXED to match what dashboard.php expects
+        $_SESSION['status'] = true;
+        $_SESSION['name'] = $current_user['firstname'] . " " . $current_user['lastname'];
+        $_SESSION['email'] = $current_user['email'];
         
-        // For this example, we'll just redirect to a welcome page
-        echo "<script>
-                alert('Login successful!');
-                window.location.href = 'Welcome_Page.php';
-              </script>";
+        // Also keep the original variables for compatibility
+        $_SESSION['logged_in'] = true;
+        $_SESSION['user_id'] = $current_user['id'];
+        $_SESSION['user_email'] = $current_user['email'];
+        $_SESSION['user_firstname'] = $current_user['firstname'];
+        $_SESSION['user_lastname'] = $current_user['lastname'];
+        
+        // Redirect to dashboard with correct path
+        header("Location: ../View/Account_Dashboard/dashboard.php");
+        exit();
     } else {
-        // Redirect back to login page with error message
-        header("Location: Login_Page.php?error=" . urlencode($error) . "&email=" . urlencode($email));
+        // User not found
+        header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("Email not found. Please sign up first.") . "&email=" . urlencode($email));
         exit();
     }
+    
 } else {
     // If not a POST request, redirect to login page
-    header("Location: Login_Page.php");
+    header("Location: ../View/Login_page_Niloy/Login_Page.php");
     exit();
 }
 ?>
