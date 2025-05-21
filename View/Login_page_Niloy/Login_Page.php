@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <title>Login Form</title>
+
     <link rel="stylesheet" href="../../Asset/CSS/login_styles.css">
+
 </head>
 <body>
     <div class="container">
