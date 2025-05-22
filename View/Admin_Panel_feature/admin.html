@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Backend Management</title>
+    <link rel="stylesheet" href="../../CSS/admin.css">
+    <script>
+        // Check admin session on page load
+        window.onload = function() {
+            fetch('../../Controller/admin_session_check.php')
+                .then(response => {
+                    if (!response.ok) {
+                        window.location.href = '../../View/Login_page_Niloy/Login_Page.php?error=' + encodeURIComponent('Admin access required.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Session check failed:', error);
+                    window.location.href = '../../View/Login_page_Niloy/Login_Page.php?error=' + encodeURIComponent('Session verification failed.');
+                });
+        };
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Admin Dashboard</h1>
+        <div class="user-info">
+            <span>Welcome, Admin</span>
+            <button class="btn btn-secondary" onclick="adminLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="nav-item active" onclick="showScreen('users')">
+                👥 User Management
+            </div>
+            <div class="nav-item" onclick="showScreen('content')">
+                🛡️ Content Moderation
+            </div>
+            <div class="nav-item" onclick="showScreen('settings')">
+                ⚙️ System Settings
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- User Management Screen -->
+            <div id="users-screen" class="screen active">
+                <div class="screen-header">
+                    <h2 class="screen-title">User Management</h2>
+                    <button class="btn btn-primary" onclick="openModal('userModal')">Add New User</button>
+                </div>
+
+                <div class="filters-section">
+                    <div class="filters-header">
+                        <h3>Filter Users</h3>
+                        <button class="btn btn-secondary" onclick="clearFilters('users')">Clear Filters</button>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="userNameFilter">Name</label>
+                            <input type="text" id="userNameFilter" placeholder="Enter name">
+                        </div>
+                        <div class="filter-group">
+                            <label for="userEmailFilter">Email</label>
+                            <input type="text" id="userEmailFilter" placeholder="Enter email">
+                        </div>
+                        <div class="filter-group">
+                            <label for="userStatusFilter">Status</label>
+                            <select id="userStatusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="userRoleFilter">Role</label>
+                            <select id="userRoleFilter">
+                                <option value="">All Roles</option>
+                                <option value="admin">Admin</option>
+                                <option value="user">User</option>
+                                <option value="moderator">Moderator</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="applyFilters('users')">Apply Filters</button>
+                </div>
+
+                <div class="actions-bar">
+                    <div class="bulk-actions">
+                        <input type="checkbox" id="selectAllUsers" onchange="selectAll('users')">
+                        <label for="selectAllUsers">Select All</label>
+                        <button class="btn btn-success btn-sm" onclick="bulkAction('activate')">Activate Selected</button>
+                        <button class="btn btn-warning btn-sm" onclick="bulkAction('deactivate')">Deactivate Selected</button>
+                        <button class="btn btn-danger btn-sm" onclick="bulkAction('delete')">Delete Selected</button>
+                    </div>
+                    <div class="sort-controls">
+                        <label>Sort by:</label>
+                        <select id="userSortBy" onchange="sortTable('users')">
+                            <option value="name">Name</option>
+                            <option value="email">Email</option>
+                            <option value="role">Role</option>
+                            <option value="created">Created Date</option>
+                        </select>
+                        <button class="btn btn-secondary btn-sm" onclick="toggleSortOrder('users')">↕️</button>
+                    </div>
+                </div>
+
+                <table class="data-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-cell"><input type="checkbox" id="userSelectAll"></th>
+                            <th onclick="sortByColumn('users', 'name')">Name</th>
+                            <th onclick="sortByColumn('users', 'email')">Email</th>
+                            <th onclick="sortByColumn('users', 'role')">Role</th>
+                            <th onclick="sortByColumn('users', 'status')">Status</th>
+                            <th onclick="sortByColumn('users', 'created')">Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- User data will be populated here -->
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <button class="btn btn-secondary" onclick="previousPage('users')">Previous</button>
+                    <span class="page-info" id="usersPageInfo">Page 1 of 1</span>
+                    <button class="btn btn-secondary" onclick="nextPage('users')">Next</button>
+                </div>
+            </div>
+
+            <!-- Content Moderation Screen -->
+            <div id="content-screen" class="screen">
+                <div class="screen-header">
+                    <h2 class="screen-title">Content Moderation</h2>
+                    <button class="btn btn-primary" onclick="refreshContent()">Refresh Queue</button>
+                </div>
+
+                <div class="filters-section">
+                    <div class="filters-header">
+                        <h3>Filter Content</h3>
+                        <button class="btn btn-secondary" onclick="clearFilters('content')">Clear Filters</button>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="contentTypeFilter">Content Type</label>
+                            <select id="contentTypeFilter">
+                                <option value="">All Types</option>
+                                <option value="post">Post</option>
+                                <option value="comment">Comment</option>
+                                <option value="image">Image</option>
+                                <option value="video">Video</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="contentStatusFilter">Status</label>
+                            <select id="contentStatusFilter">
+                                <option value="">All Statuses</option>
+                                <option value="pending">Pending Review</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="flagged">Flagged</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="reportReasonFilter">Report Reason</label>
+                            <select id="reportReasonFilter">
+                                <option value="">All Reasons</option>
+                                <option value="spam">Spam</option>
+                                <option value="inappropriate">Inappropriate</option>
+                                <option value="harassment">Harassment</option>
+                                <option value="copyright">Copyright</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label for="contentDateFilter">Date Range</label>
+                            <input type="date" id="contentDateFilter">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="applyFilters('content')">Apply Filters</button>
+                </div>
+
+                <div class="actions-bar">
+                    <div class="bulk-actions">
+                        <input type="checkbox" id="selectAllContent" onchange="selectAll('content')">
+                        <label for="selectAllContent">Select All</label>
+                        <button class="btn btn-success btn-sm" onclick="bulkModerationAction('approve')">Approve Selected</button>
+                        <button class="btn btn-danger btn-sm" onclick="bulkModerationAction('reject')">Reject Selected</button>
+                        <button class="btn btn-warning btn-sm" onclick="bulkModerationAction('flag')">Flag Selected</button>
+                    </div>
+                    <div class="sort-controls">
+                        <label>Sort by:</label>
+                        <select id="contentSortBy" onchange="sortTable('content')">
+                            <option value="created">Date Created</option>
+                            <option value="reports">Report Count</option>
+                            <option value="type">Content Type</option>
+                            <option value="author">Author</option>
+                        </select>
+                        <button class="btn btn-secondary btn-sm" onclick="toggleSortOrder('content')">↕️</button>
+                    </div>
+                </div>
+
+                <table class="data-table" id="contentTable">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-cell"><input type="checkbox" id="contentSelectAll"></th>
+                            <th onclick="sortByColumn('content', 'type')">Type</th>
+                            <th onclick="sortByColumn('content', 'content')">Content Preview</th>
+                            <th onclick="sortByColumn('content', 'author')">Author</th>
+                            <th onclick="sortByColumn('content', 'reports')">Reports</th>
+                            <th onclick="sortByColumn('content', 'status')">Status</th>
+                            <th onclick="sortByColumn('content', 'created')">Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="contentTableBody">
+                        <!-- Content data will be populated here -->
+                    </tbody>
+                </table>
+
+                <div class="pagination">
+                    <button class="btn btn-secondary" onclick="previousPage('content')">Previous</button>
+                    <span class="page-info" id="contentPageInfo">Page 1 of 1</span>
+                    <button class="btn btn-secondary" onclick="nextPage('content')">Next</button>
+                </div>
+            </div>
+
+            <!-- System Settings Screen -->
+            <div id="settings-screen" class="screen">
+                <div class="screen-header">
+                    <h2 class="screen-title">System Settings</h2>
+                    <button class="btn btn-success" onclick="saveAllSettings()">Save All Changes</button>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="settings-card">
+                        <h3>User Registration</h3>
+                        <div class="form-group">
+                            <label>
+                                <span>Allow User Registration</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="allowRegistration" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <span>Email Verification Required</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="emailVerification" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxUsers">Maximum Users</label>
+                            <input type="number" id="maxUsers" value="10000">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Content Moderation</h3>
+                        <div class="form-group">
+                            <label>
+                                <span>Auto-moderate Content</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoModeration" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="moderationLevel">Moderation Level</label>
+                            <select id="moderationLevel">
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                                <option value="strict">Strict</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportThreshold">Auto-flag Threshold</label>
+                            <input type="number" id="reportThreshold" value="5" min="1" max="20">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Security Settings</h3>
+                        <div class="form-group">
+                            <label>
+                                <span>Two-Factor Authentication</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="twoFactor">
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionTimeout">Session Timeout (minutes)</label>
+                            <input type="number" id="sessionTimeout" value="30" min="5" max="480">
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordPolicy">Password Policy</label>
+                            <select id="passwordPolicy">
+                                <option value="basic">Basic</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="strong">Strong</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>System Performance</h3>
+                        <div class="form-group">
+                            <label>
+                                <span>Enable Caching</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="enableCaching" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="cacheExpiry">Cache Expiry (hours)</label>
+                            <input type="number" id="cacheExpiry" value="24" min="1" max="168">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxFileSize">Max Upload Size (MB)</label>
+                            <input type="number" id="maxFileSize" value="10" min="1" max="100">
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Email Configuration</h3>
+                        <div class="form-group">
+                            <label for="smtpServer">SMTP Server</label>
+                            <input type="text" id="smtpServer" value="smtp.example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtpPort">SMTP Port</label>
+                            <input type="number" id="smtpPort" value="587">
+                        </div>
+                        <div class="form-group">
+                            <label for="emailFrom">From Email</label>
+                            <input type="email" id="emailFrom" value="admin@example.com">
+                        </div>
+                        <button class="btn btn-secondary" onclick="testEmailSettings()">Test Email</button>
+                    </div>
+
+                    <div class="settings-card">
+                        <h3>Backup & Maintenance</h3>
+                        <div class="form-group">
+                            <label>
+                                <span>Auto Backup</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoBackup" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="backupFrequency">Backup Frequency</label>
+                            <select id="backupFrequency">
+                                <option value="daily" selected>Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-warning" onclick="runBackup()">Run Backup Now</button>
+                            <button class="btn btn-danger" onclick="clearLogs()">Clear System Logs</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add/Edit User</h3>
+                <span class="close" onclick="closeModal('userModal')">&times;</span>
+            </div>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="userName">Name *</label>
+                    <input type="text" id="userName" required>
+                    <div class="error" id="userNameError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email *</label>
+                    <input type="email" id="userEmail" required>
+                    <div class="error" id="userEmailError"></div>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role</label>
+                    <select id="userRole">
+                        <option value="user">User</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userStatus">Status</label>
+                    <select id="userStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save User</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../JS/admin.js"></script>
+    <script>
+        // Admin logout function
+        function adminLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                fetch('../../Controller/admin_logout.php', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        window.location.href = '../../View/Login_page_Niloy/Login_Page.php?success=' + encodeURIComponent('Logged out successfully.');
+                    } else {
+                        // Fallback if fetch fails
+                        window.location.href = '../../Controller/admin_logout.php';
+                    }
+                }).catch(error => {
+                    console.error('Logout error:', error);
+                    // Fallback if fetch fails
+                    window.location.href = '../../Controller/admin_logout.php';
+                });
+            }
+        }
+    </script>
+</body>
+</html>

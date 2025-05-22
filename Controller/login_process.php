@@ -31,7 +31,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     
-    // Check if users array exists in session
+    // Check for admin credentials first
+    if ($email === "admin@aiub.edu" && $password === "admin") {
+        // Set admin session variables
+        $_SESSION['status'] = true;
+        $_SESSION['logged_in'] = true;
+        $_SESSION['user_role'] = 'admin';
+        $_SESSION['name'] = "Admin";
+        $_SESSION['email'] = $email;
+        $_SESSION['user_email'] = $email;
+        $_SESSION['user_id'] = 'admin_001';
+        
+        // Redirect to admin panel
+        header("Location: ../View/Admin_Panel_feature/admin.html");
+        exit();
+    }
+    
+    // Check if users array exists in session for regular users
     if (!isset($_SESSION['users'])) {
         header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("No users found. Please sign up first.") . "&email=" . urlencode($email));
         exit();
@@ -57,10 +73,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     
     if ($user_found) {
-        // Set session variables for logged in user - FIXED to match what dashboard.php expects
+        // Set session variables for logged in user - FIXED to match what dashboard.html expects
         $_SESSION['status'] = true;
         $_SESSION['name'] = $current_user['firstname'] . " " . $current_user['lastname'];
         $_SESSION['email'] = $current_user['email'];
+        $_SESSION['user_role'] = 'user'; // Set role for regular users
         
         // Also keep the original variables for compatibility
         $_SESSION['logged_in'] = true;
