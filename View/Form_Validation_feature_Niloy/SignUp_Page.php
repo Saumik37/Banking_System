@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>SignUp Form</title>
-    <link rel="stylesheet" href="/Banking_System/CSS/signup_styles.css">
+    <link rel="stylesheet" href="/Banking_System/Asset/CSS/signup_styles.css">
 </head>
 <body>
     <div class="main-container">
@@ -96,6 +96,6 @@
         </div>
     </div>
 
-    <script src="/Banking_System/JS/signup_script.js"></script>
+    <script src="/Banking_System/Asset/JS/signup_script.js"></script>
 </body>
 </html>

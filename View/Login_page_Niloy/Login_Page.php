@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>Login Form</title>
-    <link rel="stylesheet" href="../../CSS/login_styles.css">
+    <link rel="stylesheet" href="../../Asset/CSS/login_styles.css">
 </head>
 <body>
     <div class="container">
@@ -72,6 +72,6 @@
         </div>
     </div>
 
-    <script src="../../JS/login_script.js"></script>
+    <script src="../../Asset/JS/login_script.js"></script>
 </body>
 </html>

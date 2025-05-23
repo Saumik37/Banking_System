@@ -41,7 +41,7 @@ $error_message = isset($_GET['error']) ? $_GET['error'] : '';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Profile</title>
-    <link rel="stylesheet" href="../../CSS/edit_profile.css">
+    <link rel="stylesheet" href="../../Asset/CSS/edit_profile.css">
 </head>
 <body>
     <div class="container">
@@ -147,6 +147,6 @@ $error_message = isset($_GET['error']) ? $_GET['error'] : '';
         </div>
     </div>
 
-    <script src="../../JS/edit_profile.js"></script>
+    <script src="../../Asset/JS/edit_profile.js"></script>
 </body>
 </html>

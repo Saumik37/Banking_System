@@ -17,7 +17,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Account Dashboard</title>
-    <link rel="stylesheet" href="../../CSS/dashboard.css">
+    <link rel="stylesheet" href="../../Asset/CSS/dashboard.css">
 </head>
     <body>
         <!-- Sidebar -->
@@ -97,7 +97,11 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 <div class="search-bar">
                     <div class="search-icon">
                         <a href="../../Controller/transfer.php" class="search-btn">
-                            <img src="https://png.pngtree.com/png-vector/20190320/ourmid/pngtree-vector-search-icon-png-image_848679.jpg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                            <img src="https://png.pngtree.com/png-vector/20190320/ourmid/pngtree-vector-search-icon-png-image_848679.jpg" 
+                            width="20" 
+                            height="20" 
+                            fill="currentColor" 
+                            viewBox="0 0 16 16"
                             alt="search-btn"/>
                         </a>
                     </div>
@@ -210,6 +214,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
             
         </div>
 
-        <script src="../../JS/dashboard.js"></script>
+        <script src="../../Asset/JS/dashboard.js"></script>
     </body>
 </html>
