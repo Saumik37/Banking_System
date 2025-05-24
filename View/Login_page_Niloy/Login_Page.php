@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login Form</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form - CarRental System</title>
     <link rel="stylesheet" href="../../Asset/CSS/login_styles.css">
-
 </head>
 <body>
     <div class="container">
@@ -27,9 +27,9 @@
                         <line x1="12" y1="17" x2="12.01" y2="17"></line>
                     </svg>
                 </div>
-
             </div>
         </div>
+        
         <div class="bottom-section">
             <?php
             // Display error message if there is one
@@ -43,15 +43,32 @@
             }
             ?>
             
-            <form id="loginForm" method="post" action="../../Controller/login_process.php">
+            <form id="loginForm" method="post" action="../../Controller/login_process.php" novalidate>
                 <div class="form-group">
-                    <label for="email">Email or phone number</label>
-                    <input type="text" id="email" name="email" placeholder="Type here..." value="<?php echo isset($_GET['email']) ? htmlspecialchars($_GET['email']) : ''; ?>">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        placeholder="Enter your email..." 
+                        value="<?php echo isset($_GET['email']) ? htmlspecialchars($_GET['email']) : ''; ?>"
+                        autocomplete="email"
+                        required
+                    >
                 </div>
+                
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Type here...">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password..."
+                        autocomplete="current-password"
+                        required
+                    >
                 </div>
+                
                 <button type="submit" class="login-btn">Log In</button>
                 
                 <div class="signup-link">
@@ -60,15 +77,18 @@
                 </div>
             </form>
             
-            <div class="social-container">
-                <div class="social-btn">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google logo" width="30" height="30" />
-                </div>
-                <div class="social-btn">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook logo" width="30" height="30" />
-                </div>
-                <div class="social-btn">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" alt="Apple logo" width="30" height="30" />
+            <div class="social-login">
+                <div class="divider">Or continue with</div>
+                <div class="social-container">
+                    <div class="social-btn" title="Login with Google">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" width="30" height="30" />
+                    </div>
+                    <div class="social-btn" title="Login with Facebook">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook" width="30" height="30" />
+                    </div>
+                    <div class="social-btn" title="Login with Apple">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" alt="Apple" width="30" height="30" />
+                    </div>
                 </div>
             </div>
         </div>

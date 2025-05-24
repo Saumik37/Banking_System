@@ -20,9 +20,10 @@ function init() {
         <p>Centered on Bangladesh</p>
     </div>`;
 }
-//back button functionality     
+//back button functionality
+// Add event listener to the back button
 document.getElementById("back-btn").addEventListener("click", function () {
-    window.location.href = "../Account_Dashboard/Account_Dashboard.html";
+    window.location.href = "../Account_Dashboard/dashboard.php";
   });
 
 // Find ATMs based on location and filters

@@ -145,13 +145,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Back button functionality
-    const backButton = document.getElementById('back-btn');
-        backButton.addEventListener('click', function() {
-            const cardItem = this.closest('.card-item');        
-            modal.style.display = 'none';
-            window.location.href = '../View/Account_Dashboard/Account_Dashboard.html';
-    });     
+    //back button functionality
+    // Add event listener to the back button
+    document.getElementById("back-btn").addEventListener("click", function () {
+        window.location.href = "../Account_Dashboard/dashboard.php";
+    });
+
     
     // Modal Close Buttons
     const closeButtons = document.querySelectorAll('.close-modal');

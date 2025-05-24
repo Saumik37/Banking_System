@@ -1,9 +1,13 @@
 <?php
-// login_process.php - Controller for processing login data using only sessions
+// login_process.php - Controller for processing login data using database
 session_start();
 
-// Validate and sanitize input
-function validateInput($data) {
+// Include configuration and user functions from Model directory
+require_once '../Model/config.php';
+require_once '../Model/user_functions.php';
+
+// Sanitization function
+function sanitizeInput($data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -12,9 +16,9 @@ function validateInput($data) {
 
 // Main process
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data
-    $email = validateInput($_POST["email"]);
-    $password = $_POST["password"];
+    // Get form data and sanitize
+    $email = sanitizeInput($_POST["email"]);
+    $password = trim($_POST["password"]); // Don't sanitize password with htmlspecialchars
     
     // Validate data
     $error = "";
@@ -23,6 +27,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Email is required!";
     } elseif (empty($password)) {
         $error = "Password is required!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format!";
     }
     
     // If there's a validation error, redirect back with error message
@@ -31,67 +37,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
     
-    // Check for admin credentials first
-    if ($email === "admin@aiub.edu" && $password === "admin") {
+    // Check for admin credentials first (static credentials)
+    if ($email === "admin@aiub.edu" && $password === "adminn") {
         // Set admin session variables
         $_SESSION['status'] = true;
         $_SESSION['logged_in'] = true;
         $_SESSION['user_role'] = 'admin';
+        $_SESSION['is_admin'] = true; // Add this for admin session check
         $_SESSION['name'] = "Admin";
         $_SESSION['email'] = $email;
         $_SESSION['user_email'] = $email;
         $_SESSION['user_id'] = 'admin_001';
         
         // Redirect to admin panel
-        header("Location: ../View/Admin_Panel_feature/admin.html");
+        header("Location: ../View/Admin_Panel_feature/admin.php");
         exit();
     }
     
-    // Check if users array exists in session for regular users
-    if (!isset($_SESSION['users'])) {
-        header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("No users found. Please sign up first.") . "&email=" . urlencode($email));
-        exit();
-    }
+    // Use the authenticateUser function from user_functions.php for regular users
+    $auth_result = authenticateUser($email, $password);
     
-    // Search for matching user
-    $user_found = false;
-    $current_user = null;
-    
-    foreach ($_SESSION['users'] as $user) {
-        if ($user['email'] === $email) {
-            // Check password
-            if (password_verify($password, $user['password'])) {
-                $user_found = true;
-                $current_user = $user;
-                break;
-            } else {
-                // Email found but password incorrect
-                header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("Incorrect password!") . "&email=" . urlencode($email));
-                exit();
-            }
-        }
-    }
-    
-    if ($user_found) {
-        // Set session variables for logged in user - FIXED to match what dashboard.html expects
+    if ($auth_result['success']) {
+        $user = $auth_result['user'];
+        
+        // Login successful - Set session variables for regular users
         $_SESSION['status'] = true;
-        $_SESSION['name'] = $current_user['firstname'] . " " . $current_user['lastname'];
-        $_SESSION['email'] = $current_user['email'];
-        $_SESSION['user_role'] = 'user'; // Set role for regular users
-        
-        // Also keep the original variables for compatibility
         $_SESSION['logged_in'] = true;
-        $_SESSION['user_id'] = $current_user['id'];
-        $_SESSION['user_email'] = $current_user['email'];
-        $_SESSION['user_firstname'] = $current_user['firstname'];
-        $_SESSION['user_lastname'] = $current_user['lastname'];
+        $_SESSION['name'] = $user['firstname'] . " " . $user['lastname'];
+        $_SESSION['email'] = $user['email'];
+        $_SESSION['user_role'] = 'user'; // Set role for regular users
+        $_SESSION['is_admin'] = false; // Explicitly set as false for regular users
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_firstname'] = $user['firstname'];
+        $_SESSION['user_lastname'] = $user['lastname'];
+        $_SESSION['user_nid'] = $user['nid'];
+        $_SESSION['user_address'] = $user['address'];
+        $_SESSION['user_gender'] = $user['gender'];
         
-        // Redirect to dashboard with correct path
+        // Debug log (remove in production)
+        error_log("User logged in successfully: " . $email);
+        
+        // Redirect to dashboard
         header("Location: ../View/Account_Dashboard/dashboard.php");
         exit();
+        
     } else {
-        // User not found
-        header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode("Email not found. Please sign up first.") . "&email=" . urlencode($email));
+        // Login failed - redirect with error message
+        error_log("Login failed for: " . $email . " - " . $auth_result['message']);
+        header("Location: ../View/Login_page_Niloy/Login_Page.php?error=" . urlencode($auth_result['message']) . "&email=" . urlencode($email));
         exit();
     }
     

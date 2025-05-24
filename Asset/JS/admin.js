@@ -1,20 +1,4 @@
-// Sample Data
-let usersData = [
-    { id: 1, name: "John Doe", email: "john@example.com", role: "admin", status: "active", created: "2025-01-15" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "user", status: "active", created: "2025-02-10" },
-    { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "moderator", status: "inactive", created: "2025-03-05" },
-    { id: 4, name: "Alice Brown", email: "alice@example.com", role: "user", status: "pending", created: "2025-04-20" },
-    { id: 5, name: "Charlie Wilson", email: "charlie@example.com", role: "user", status: "active", created: "2025-05-01" }
-];
-
-let contentData = [
-    { id: 1, type: "post", content: "This is a sample post content...", author: "John Doe", reports: 2, status: "pending", created: "2025-05-20" },
-    { id: 2, type: "comment", content: "Great article! Thanks for sharing...", author: "Jane Smith", reports: 0, status: "approved", created: "2025-05-19" },
-    { id: 3, type: "image", content: "vacation_photo.jpg", author: "Bob Johnson", reports: 5, status: "flagged", created: "2025-05-18" },
-    { id: 4, type: "video", content: "tutorial_video.mp4", author: "Alice Brown", reports: 1, status: "approved", created: "2025-05-17" },
-    { id: 5, type: "post", content: "Check out this amazing deal...", author: "Charlie Wilson", reports: 8, status: "rejected", created: "2025-05-16" }
-];
-
+// Admin Dashboard JavaScript
 // Pagination and sorting variables
 let currentPage = { users: 1, content: 1 };
 let itemsPerPage = 10;
@@ -27,7 +11,46 @@ document.addEventListener('DOMContentLoaded', function() {
     showScreen('users');
     populateTable('users');
     populateTable('content');
+    
+    // Initialize form submission handler
+    initializeFormHandlers();
+    
+    // Session check on page load
+    checkAdminSession();
 });
+
+// Session Management
+function checkAdminSession() {
+    fetch('../../Controller/admin_session_check.php')
+        .then(response => {
+            if (!response.ok) {
+                window.location.href = '../../View/Login_page_Niloy/Login_Page.php?error=' + encodeURIComponent('Admin access required.');
+            }
+        })
+        .catch(error => {
+            console.error('Session check failed:', error);
+            window.location.href = '../../View/Login_page_Niloy/Login_Page.php?error=' + encodeURIComponent('Session verification failed.');
+        });
+}
+
+function adminLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        fetch('../../Controller/admin_logout.php', {
+            method: 'POST'
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = '../../View/Login_page_Niloy/Login_Page.php?success=' + encodeURIComponent('Logged out successfully.');
+            } else {
+                // Fallback if fetch fails
+                window.location.href = '../../Controller/admin_logout.php';
+            }
+        }).catch(error => {
+            console.error('Logout error:', error);
+            // Fallback if fetch fails
+            window.location.href = '../../Controller/admin_logout.php';
+        });
+    }
+}
 
 // Navigation functions
 function showScreen(screenName) {
@@ -292,9 +315,38 @@ function nextPage(tableType) {
     }
 }
 
-// Modal functions
+// Modal functions - Enhanced with server integration
 function openModal(modalId) {
     document.getElementById(modalId).style.display = 'block';
+    
+    if (modalId === 'userModal') {
+        // Reset form for adding new user
+        document.getElementById('userForm').reset();
+        
+        // Check if modal title element exists and set it
+        const modalTitle = document.getElementById('modalTitle');
+        if (modalTitle) {
+            modalTitle.textContent = 'Add New User';
+        }
+        
+        // Check if form action element exists and set it
+        const formAction = document.getElementById('formAction');
+        if (formAction) {
+            formAction.value = 'add_user';
+        }
+        
+        // Check if userId element exists and clear it
+        const userIdField = document.getElementById('userId');
+        if (userIdField) {
+            userIdField.value = '';
+        }
+        
+        // Make password required for new users
+        const passwordField = document.getElementById('password');
+        if (passwordField) {
+            passwordField.required = true;
+        }
+    }
 }
 
 function closeModal(modalId) {
@@ -302,28 +354,118 @@ function closeModal(modalId) {
     clearForm();
 }
 
-// User management functions
+// User management functions - Enhanced with server integration
 function editUser(userId) {
-    const user = usersData.find(u => u.id === userId);
+    // Try to find user data from usersData array first (client-side data)
+    let user = usersData ? usersData.find(u => u.id === userId) : null;
+    
     if (user) {
-        document.getElementById('userName').value = user.name;
-        document.getElementById('userEmail').value = user.email;
-        document.getElementById('userRole').value = user.role;
-        document.getElementById('userStatus').value = user.status;
+        // Use client-side data
+        populateUserForm(user, 'edit');
+    } else {
+        // Fall back to reading from table rows (server-side rendered data)
+        const rows = document.querySelectorAll('tbody tr');
+        let userData = {};
         
-        // Store user ID for editing
-        document.getElementById('userForm').dataset.userId = userId;
-        openModal('userModal');
+        rows.forEach(row => {
+            const cells = row.cells;
+            if (cells[0].textContent == userId) {
+                userData = {
+                    id: cells[0].textContent,
+                    firstname: cells[1].textContent,
+                    lastname: cells[2].textContent,
+                    nid: cells[3].textContent,
+                    email: cells[4].textContent,
+                    address: cells[5].textContent,
+                    gender: cells[6].textContent
+                };
+            }
+        });
+        
+        if (userData.id) {
+            populateUserForm(userData, 'edit');
+        }
     }
+}
+
+function populateUserForm(userData, mode) {
+    // Set modal title
+    const modalTitle = document.getElementById('modalTitle');
+    if (modalTitle) {
+        modalTitle.textContent = mode === 'edit' ? 'Edit User' : 'Add New User';
+    }
+    
+    // Set form action
+    const formAction = document.getElementById('formAction');
+    if (formAction) {
+        formAction.value = mode === 'edit' ? 'update_user' : 'add_user';
+    }
+    
+    // Populate form fields - handle both naming conventions
+    const fields = [
+        { ids: ['userId', 'userIdField'], value: userData.id || '' },
+        { ids: ['userName', 'firstname'], value: userData.name || userData.firstname || '' },
+        { ids: ['userLastName', 'lastname'], value: userData.lastname || '' },
+        { ids: ['userNid', 'nid'], value: userData.nid || '' },
+        { ids: ['userEmail', 'email'], value: userData.email || '' },
+        { ids: ['userAddress', 'address'], value: userData.address || '' },
+        { ids: ['userGender', 'gender'], value: userData.gender || '' },
+        { ids: ['userRole'], value: userData.role || '' },
+        { ids: ['userStatus'], value: userData.status || '' }
+    ];
+    
+    fields.forEach(field => {
+        field.ids.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.value = field.value;
+            }
+        });
+    });
+    
+    // Handle password field requirement
+    const passwordField = document.getElementById('password');
+    if (passwordField) {
+        passwordField.required = mode !== 'edit';
+    }
+    
+    openModal('userModal');
 }
 
 function deleteUser(userId) {
     if (confirm('Are you sure you want to delete this user?')) {
-        const userIndex = usersData.findIndex(user => user.id === userId);
-        if (userIndex !== -1) {
-            usersData.splice(userIndex, 1);
-            applyFilters('users');
-            showSuccessMessage('User deleted successfully.');
+        // Check if we have server-side integration
+        if (typeof fetch !== 'undefined' && window.location.href.includes('.php')) {
+            // Server-side deletion
+            const formData = new FormData();
+            formData.append('action', 'delete_user');
+            formData.append('id', userId);
+            
+            fetch(window.location.href, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the user.');
+            });
+        } else {
+            // Client-side deletion (fallback)
+            const userIndex = usersData.findIndex(user => user.id === userId);
+            if (userIndex !== -1) {
+                usersData.splice(userIndex, 1);
+                applyFilters('users');
+                showSuccessMessage('User deleted successfully.');
+            }
         }
     }
 }
@@ -359,42 +501,77 @@ function refreshContent() {
     showSuccessMessage('Content queue refreshed successfully.');
 }
 
-// Form handling
-document.getElementById('userForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    if (validateUserForm()) {
-        const name = document.getElementById('userName').value;
-        const email = document.getElementById('userEmail').value;
-        const role = document.getElementById('userRole').value;
-        const status = document.getElementById('userStatus').value;
-        const userId = this.dataset.userId;
-        
-        if (userId) {
-            // Edit existing user
-            const userIndex = usersData.findIndex(user => user.id === parseInt(userId));
-            if (userIndex !== -1) {
-                usersData[userIndex] = { ...usersData[userIndex], name, email, role, status };
-                showSuccessMessage('User updated successfully.');
+// Form handling - Enhanced with server integration
+function initializeFormHandlers() {
+    const userForm = document.getElementById('userForm');
+    if (userForm) {
+        userForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check if server-side integration is available
+            if (typeof fetch !== 'undefined' && window.location.href.includes('.php')) {
+                // Server-side form submission
+                const formData = new FormData(this);
+                
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        closeModal('userModal');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while saving the user.');
+                });
+            } else {
+                // Client-side form handling (fallback)
+                if (validateUserForm()) {
+                    handleClientSideFormSubmission();
+                }
             }
-        } else {
-            // Add new user
-            const newUser = {
-                id: Math.max(...usersData.map(u => u.id)) + 1,
-                name,
-                email,
-                role,
-                status,
-                created: new Date().toISOString().split('T')[0]
-            };
-            usersData.push(newUser);
-            showSuccessMessage('User added successfully.');
-        }
-        
-        closeModal('userModal');
-        applyFilters('users');
+        });
     }
-});
+}
+
+function handleClientSideFormSubmission() {
+    const name = document.getElementById('userName').value;
+    const email = document.getElementById('userEmail').value;
+    const role = document.getElementById('userRole').value;
+    const status = document.getElementById('userStatus').value;
+    const userId = document.getElementById('userForm').dataset.userId;
+    
+    if (userId) {
+        // Edit existing user
+        const userIndex = usersData.findIndex(user => user.id === parseInt(userId));
+        if (userIndex !== -1) {
+            usersData[userIndex] = { ...usersData[userIndex], name, email, role, status };
+            showSuccessMessage('User updated successfully.');
+        }
+    } else {
+        // Add new user
+        const newUser = {
+            id: Math.max(...usersData.map(u => u.id)) + 1,
+            name,
+            email,
+            role,
+            status,
+            created: new Date().toISOString().split('T')[0]
+        };
+        usersData.push(newUser);
+        showSuccessMessage('User added successfully.');
+    }
+    
+    closeModal('userModal');
+    applyFilters('users');
+}
 
 function validateUserForm() {
     const name = document.getElementById('userName').value;
@@ -402,28 +579,31 @@ function validateUserForm() {
     let isValid = true;
     
     // Clear previous errors
-    document.getElementById('userNameError').textContent = '';
-    document.getElementById('userEmailError').textContent = '';
+    const nameError = document.getElementById('userNameError');
+    const emailError = document.getElementById('userEmailError');
     
-    if (name.length < 2) {
-        document.getElementById('userNameError').textContent = 'Name must be at least 2 characters long.';
+    if (nameError) nameError.textContent = '';
+    if (emailError) emailError.textContent = '';
+    
+    if (name && name.length < 2) {
+        if (nameError) nameError.textContent = 'Name must be at least 2 characters long.';
         isValid = false;
     }
     
-    if (!isValidEmail(email)) {
-        document.getElementById('userEmailError').textContent = 'Please enter a valid email address.';
+    if (email && !isValidEmail(email)) {
+        if (emailError) emailError.textContent = 'Please enter a valid email address.';
         isValid = false;
     }
     
     // Check for duplicate email (excluding current user if editing)
     const userId = document.getElementById('userForm').dataset.userId;
-    const existingUser = usersData.find(user => 
+    const existingUser = usersData ? usersData.find(user => 
         user.email.toLowerCase() === email.toLowerCase() && 
         user.id !== parseInt(userId)
-    );
+    ) : null;
     
     if (existingUser) {
-        document.getElementById('userEmailError').textContent = 'Email address already exists.';
+        if (emailError) emailError.textContent = 'Email address already exists.';
         isValid = false;
     }
     
@@ -436,33 +616,41 @@ function isValidEmail(email) {
 }
 
 function clearForm() {
-    document.getElementById('userForm').reset();
-    document.getElementById('userForm').removeAttribute('data-user-id');
-    document.getElementById('userNameError').textContent = '';
-    document.getElementById('userEmailError').textContent = '';
+    const userForm = document.getElementById('userForm');
+    if (userForm) {
+        userForm.reset();
+        userForm.removeAttribute('data-user-id');
+    }
+    
+    // Clear error messages
+    const errorElements = ['userNameError', 'userEmailError'];
+    errorElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = '';
+    });
 }
 
 // Settings functions
 function saveAllSettings() {
     // Simulate saving settings
     const settings = {
-        allowRegistration: document.getElementById('allowRegistration').checked,
-        emailVerification: document.getElementById('emailVerification').checked,
-        maxUsers: document.getElementById('maxUsers').value,
-        autoModeration: document.getElementById('autoModeration').checked,
-        moderationLevel: document.getElementById('moderationLevel').value,
-        reportThreshold: document.getElementById('reportThreshold').value,
-        twoFactor: document.getElementById('twoFactor').checked,
-        sessionTimeout: document.getElementById('sessionTimeout').value,
-        passwordPolicy: document.getElementById('passwordPolicy').value,
-        enableCaching: document.getElementById('enableCaching').checked,
-        cacheExpiry: document.getElementById('cacheExpiry').value,
-        maxFileSize: document.getElementById('maxFileSize').value,
-        smtpServer: document.getElementById('smtpServer').value,
-        smtpPort: document.getElementById('smtpPort').value,
-        emailFrom: document.getElementById('emailFrom').value,
-        autoBackup: document.getElementById('autoBackup').checked,
-        backupFrequency: document.getElementById('backupFrequency').value
+        allowRegistration: document.getElementById('allowRegistration')?.checked,
+        emailVerification: document.getElementById('emailVerification')?.checked,
+        maxUsers: document.getElementById('maxUsers')?.value,
+        autoModeration: document.getElementById('autoModeration')?.checked,
+        moderationLevel: document.getElementById('moderationLevel')?.value,
+        reportThreshold: document.getElementById('reportThreshold')?.value,
+        twoFactor: document.getElementById('twoFactor')?.checked,
+        sessionTimeout: document.getElementById('sessionTimeout')?.value,
+        passwordPolicy: document.getElementById('passwordPolicy')?.value,
+        enableCaching: document.getElementById('enableCaching')?.checked,
+        cacheExpiry: document.getElementById('cacheExpiry')?.value,
+        maxFileSize: document.getElementById('maxFileSize')?.value,
+        smtpServer: document.getElementById('smtpServer')?.value,
+        smtpPort: document.getElementById('smtpPort')?.value,
+        emailFrom: document.getElementById('emailFrom')?.value,
+        autoBackup: document.getElementById('autoBackup')?.checked,
+        backupFrequency: document.getElementById('backupFrequency')?.value
     };
     
     console.log('Settings saved:', settings);
@@ -471,9 +659,9 @@ function saveAllSettings() {
 
 function testEmailSettings() {
     // Simulate testing email settings
-    const smtpServer = document.getElementById('smtpServer').value;
-    const smtpPort = document.getElementById('smtpPort').value;
-    const emailFrom = document.getElementById('emailFrom').value;
+    const smtpServer = document.getElementById('smtpServer')?.value;
+    const smtpPort = document.getElementById('smtpPort')?.value;
+    const emailFrom = document.getElementById('emailFrom')?.value;
     
     if (smtpServer && smtpPort && emailFrom) {
         showSuccessMessage('Email settings test successful.');
@@ -503,7 +691,7 @@ function showSuccessMessage(message) {
     successDiv.className = 'success';
     successDiv.textContent = message;
     
-    const container = document.querySelector('.main-content');
+    const container = document.querySelector('.main-content') || document.body;
     container.insertBefore(successDiv, container.firstChild);
     
     // Remove message after 3 seconds
@@ -512,10 +700,19 @@ function showSuccessMessage(message) {
     }, 3000);
 }
 
-// Close modal when clicking outside
+// Enhanced modal close functionality - handles both approaches
 window.onclick = function(event) {
+    // Handle clicking outside modal (from first file)
     if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
         clearForm();
+    }
+    
+    // Handle multiple modals (from second file)
+    const modals = document.getElementsByClassName('modal');
+    for (let i = 0; i < modals.length; i++) {
+        if (event.target === modals[i]) {
+            modals[i].style.display = 'none';
+        }
     }
 }

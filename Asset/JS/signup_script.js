@@ -24,13 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize event listeners
     initializeEventListeners();
     
-    /**
-     * Initialize all event listeners
-     */
+    /*
+        Initialize all event listeners
+    */
     function initializeEventListeners() {
         // Toggle tooltip on help icon click
         if (helpIcon && tooltip) {
-            helpIcon.addEventListener('click', function() {
+            helpIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
                 tooltip.classList.toggle('show');
             });
             
@@ -66,6 +67,77 @@ document.addEventListener('DOMContentLoaded', function() {
                 resetForm();
             });
         }
+
+        // Add real-time NID validation
+        if (nidInput) {
+            nidInput.addEventListener('input', function() {
+                // Remove non-numeric characters
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // Limit to 10 digits
+                if (this.value.length > 10) {
+                    this.value = this.value.slice(0, 10);
+                }
+            });
+        }
+
+        // Add password strength indicator
+        if (passwordInput) {
+            passwordInput.addEventListener('input', function() {
+                showPasswordStrength(this.value);
+            });
+        }
+    }
+
+    /**
+     * Show password strength indicator
+     * @param {string} password - The password to check
+     */
+    function showPasswordStrength(password) {
+        // Remove existing strength indicator
+        const existingIndicator = document.querySelector('.password-strength');
+        if (existingIndicator) {
+            existingIndicator.remove();
+        }
+
+        if (password.length === 0) return;
+
+        const indicator = document.createElement('div');
+        indicator.className = 'password-strength';
+        indicator.style.fontSize = '12px';
+        indicator.style.marginTop = '5px';
+        indicator.style.padding = '5px';
+        indicator.style.borderRadius = '4px';
+
+        let strength = 0;
+        let message = '';
+        let color = '';
+
+        // Check password criteria
+        if (password.length >= 6) strength++;
+        if (password.match(/[a-z]/)) strength++;
+        if (password.match(/[A-Z]/)) strength++;
+        if (password.match(/[0-9]/)) strength++;
+        if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+        // Set message and color based on strength
+        if (strength < 2) {
+            message = 'Weak password';
+            color = '#ff6b6b';
+        } else if (strength < 4) {
+            message = 'Medium password';
+            color = '#ffa500';
+        } else {
+            message = 'Strong password';
+            color = '#2ecc71';
+        }
+
+        indicator.textContent = message;
+        indicator.style.color = color;
+        indicator.style.backgroundColor = color + '20';
+
+        // Insert after password input
+        passwordInput.parentNode.appendChild(indicator);
     }
 
     /**
@@ -85,11 +157,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check empty fields
         if (value === '') {
             field.classList.add('input-error');
-            if (errorMsg) errorMsg.textContent = field.getAttribute('placeholder') + ' is required!';
+            const fieldName = field.getAttribute('placeholder') || field.previousElementSibling.textContent.replace(':', '');
+            if (errorMsg) errorMsg.textContent = fieldName + ' is required!';
             return false;
         }
         
         // Specific validations
+        if (field === firstnameInput || field === lastnameInput) {
+            if (value.length < 2) {
+                field.classList.add('input-error');
+                if (errorMsg) errorMsg.textContent = 'Name must be at least 2 characters!';
+                return false;
+            }
+            if (!/^[a-zA-Z\s]+$/.test(value)) {
+                field.classList.add('input-error');
+                if (errorMsg) errorMsg.textContent = 'Name can only contain letters and spaces!';
+                return false;
+            }
+        }
+        
         if (field === nidInput) {
             if (value.length !== 10 || isNaN(value)) {
                 field.classList.add('input-error');
@@ -99,10 +185,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (field === emailInput) {
-            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i;
             if (!value.match(emailPattern)) {
                 field.classList.add('input-error');
                 if (errorMsg) errorMsg.textContent = 'Please enter a valid email address!';
+                return false;
+            }
+        }
+        
+        if (field === addressInput) {
+            if (value.length < 10) {
+                field.classList.add('input-error');
+                if (errorMsg) errorMsg.textContent = 'Address must be at least 10 characters!';
                 return false;
             }
         }
@@ -125,11 +219,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function validateForm() {
         const inputs = [firstnameInput, lastnameInput, nidInput, emailInput, addressInput, passwordInput];
         let isValid = true;
+        let firstErrorField = null;
         
         // Validate each field
         inputs.forEach(input => {
             if (input && !validateField(input)) {
                 isValid = false;
+                if (!firstErrorField) {
+                    firstErrorField = input;
+                }
             }
         });
         
@@ -148,6 +246,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (errorMsg) errorMsg.textContent = 'Please select your gender!';
                 isValid = false;
             }
+        }
+        
+        // Focus on first error field
+        if (firstErrorField) {
+            firstErrorField.focus();
         }
         
         return isValid;
@@ -177,6 +280,17 @@ document.addEventListener('DOMContentLoaded', function() {
         if (errorMsg) errorMsg.textContent = '';
         const successMsg = document.getElementById('success');
         if (successMsg) successMsg.textContent = '';
+        
+        // Remove password strength indicator
+        const strengthIndicator = document.querySelector('.password-strength');
+        if (strengthIndicator) {
+            strengthIndicator.remove();
+        }
+        
+        // Focus on first input
+        if (firstnameInput) {
+            firstnameInput.focus();
+        }
     }
     
     // Add form submission validation
@@ -188,17 +302,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 return false;
             }
             
-            // Display loading or processing message if needed
+            // Disable submit button to prevent double submission
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Processing...';
+            }
+            
+            // Display processing message
             const successMsg = document.getElementById('success');
             if (successMsg) {
                 successMsg.textContent = 'Processing your request...';
                 successMsg.classList.add('success-message');
             }
             
+            // Clear any existing error messages
+            if (errorMsg) errorMsg.textContent = '';
+            
             // Allow the form to submit normally
-            // The PHP signup_process.php script will handle the data processing
-            // and redirect to Login_Page.php after successful signup
             return true;
         });
     }
+
+    // Auto-hide success/error messages after 5 seconds
+    setTimeout(function() {
+        const successMsg = document.getElementById('success');
+        const errorMsg = document.getElementById('error');
+        
+        if (successMsg && successMsg.textContent) {
+            successMsg.style.transition = 'opacity 0.5s';
+            successMsg.style.opacity = '0';
+            setTimeout(() => successMsg.textContent = '', 500);
+        }
+        
+        if (errorMsg && errorMsg.textContent) {
+            errorMsg.style.transition = 'opacity 0.5s';
+            errorMsg.style.opacity = '0';
+            setTimeout(() => errorMsg.textContent = '', 500);
+        }
+    }, 5000);
 });
