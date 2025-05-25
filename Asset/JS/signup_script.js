@@ -28,18 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
         Initialize all event listeners
     */
     function initializeEventListeners() {
-        // Toggle tooltip on help icon click
-        if (helpIcon && tooltip) {
-            helpIcon.addEventListener('click', function(e) {
-                e.stopPropagation();
-                tooltip.classList.toggle('show');
-            });
-            
-            // Hide tooltip when clicking elsewhere
-            document.addEventListener('click', function(event) {
-                if (!helpIcon.contains(event.target)) {
-                    tooltip.classList.remove('show');
-                }
+        // Help icon tooltip functionality
+        if (helpIcon) {
+            helpIcon.addEventListener('click', function() {
+                alert('Sign Up for one bank solution.\n\n This will help you to get all the bank \naccounts in this one solution.');
             });
         }
 

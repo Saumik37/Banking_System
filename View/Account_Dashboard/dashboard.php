@@ -27,7 +27,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
             <div class="sidebar-menu">
                 <div class="sidebar-item active">
                     <a href="dashboard.php" class="home-btn">
-                        <img src="https://static.vecteezy.com/system/resources/previews/021/948/177/non_2x/3d-home-icon-free-png.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                        <img src="https://static.vecteezy.com/system/resources/previews/021/948/177/non_2x/3d-home-icon-free-png.png" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"
                         alt="home-btn"
                         onmouseover="this.style.opacity='0.5'" 
                         onmouseout="this.style.opacity='1'" />

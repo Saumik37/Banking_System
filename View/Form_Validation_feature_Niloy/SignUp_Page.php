@@ -18,14 +18,14 @@
                 <h1 class="title">Sign Up</h1>
             </div>
             <div class="help-icon" id="helpIcon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
-                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                </svg>
-                <div class="tooltip" id="tooltip">
-                    Sign Up for one bank solution. This will help you to get all the bank accounts in this one solution.
-                </div>
+                <img src="https://icons.veryicon.com/png/o/miscellaneous/flat-icon/help-252.png" 
+                width="20" 
+                height="20" 
+                fill="currentColor" 
+                viewBox="0 0 16 16"
+                alt="home-btn"
+                onmouseover="this.style.opacity='0.5'" 
+                onmouseout="this.style.opacity='1'" />
             </div>
         </div>
         
