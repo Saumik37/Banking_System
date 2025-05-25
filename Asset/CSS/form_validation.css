@@ -12,14 +12,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 /* Centering Container */
 .container {
     width: 100%;
     max-width: 500px;
-    padding: 20px;
     text-align: center;
 }
 
@@ -28,9 +28,14 @@ h2 {
     text-align: center;
     color: #1976d2;
     margin-bottom: 20px;
+    font-size: 1.8em;
 }
 
 /* Tabs (Login/Register) */
+.tab-buttons {
+    margin-bottom: 20px;
+}
+
 .tab-buttons button {
     padding: 12px 30px;
     margin: 10px;
@@ -47,6 +52,11 @@ h2 {
     background-color: #125a9c;
 }
 
+.tab-buttons button.active {
+    background-color: #125a9c;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
 /* Form Styling */
 .form {
     width: 100%;
@@ -54,7 +64,32 @@ h2 {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 30px;
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* Fieldset Styling */
+fieldset {
+    border: none;
+    padding: 0;
+}
+
+legend {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #1976d2;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Label Styling */
+label {
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
 }
 
 /* Input Fields */
@@ -63,10 +98,19 @@ input[type="email"],
 input[type="password"] {
     width: 100%;
     padding: 10px;
-    margin: 10px 0;
+    margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #1976d2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(25, 118, 210, 0.3);
 }
 
 /* Submit Button */
@@ -80,10 +124,16 @@ input[type="submit"] {
     cursor: pointer;
     font-size: 1.2em;
     transition: background-color 0.3s ease;
+    margin-top: 15px;
 }
 
 input[type="submit"]:hover {
     background-color: #125a9c;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+input[type="submit"]:active {
+    transform: translateY(1px);
 }
 
 /* Table Styling for Login/Register */
@@ -115,18 +165,63 @@ tr:hover {
     display: none;
 }
 
+/* Error Message Styling */
+.error-message {
+    color: #d32f2f;
+    font-size: 0.9em;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Success Message Styling */
+.success-message {
+    color: #388e3c;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Loading State */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
 /* Responsive Design for Smaller Screens */
 @media (max-width: 768px) {
     .container {
         padding: 15px;
+        max-width: 90%;
+    }
+
+    .form {
+        padding: 20px;
+    }
+
+    .tab-buttons button {
+        width: 45%;
+        margin: 5px;
+        padding: 10px 15px;
+        font-size: 1em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    legend {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    .tab-buttons button {
+        width: 100%;
+        margin: 5px 0;
     }
 
     .form {
         padding: 15px;
-    }
-
-    .tab-buttons button {
-        width: 100%;
-        margin: 5px 0;
     }
 }
