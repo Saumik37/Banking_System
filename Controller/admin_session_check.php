@@ -1,5 +1,5 @@
 <?php
-// admin_session_check.php - Middleware to check admin authentication
+// admin_session_check.php
 session_start();
 
 // Check if user is logged in and is admin

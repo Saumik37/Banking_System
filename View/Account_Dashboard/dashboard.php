@@ -27,7 +27,11 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
             <div class="sidebar-menu">
                 <div class="sidebar-item active">
                     <a href="dashboard.php" class="home-btn">
-                        <img src="https://static.vecteezy.com/system/resources/previews/021/948/177/non_2x/3d-home-icon-free-png.png" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"
+                        <img src="https://static.vecteezy.com/system/resources/previews/021/948/177/non_2x/3d-home-icon-free-png.png" 
+                        width="30" 
+                        height="30" 
+                        fill="currentColor" 
+                        viewBox="0 0 16 16"
                         alt="home-btn"
                         onmouseover="this.style.opacity='0.5'" 
                         onmouseout="this.style.opacity='1'" />
@@ -35,7 +39,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </div>
                 <div class="sidebar-item">
                     <a href="../Cheque_Deposit/cheque_deposit.html" class="cheque-btn">
-                        <img src="https://cdn-icons-png.flaticon.com/512/13974/13974570.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                        <img src="https://cdn-icons-png.flaticon.com/512/13974/13974570.png" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"
                         alt="cheque-btn"
                         onmouseover="this.style.opacity='0.5'" 
                         onmouseout="this.style.opacity='1'" />
@@ -43,7 +47,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </div>
                 <div class="sidebar-item">
                     <a href="../Card_Management/card_management.html" class="card-btn">
-                        <img src="https://cdn-icons-png.flaticon.com/512/6963/6963703.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                        <img src="https://cdn-icons-png.flaticon.com/512/6963/6963703.png" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"
                         alt="card-btn"
                         onmouseover="this.style.opacity='0.5'" 
                         onmouseout="this.style.opacity='1'" />
@@ -51,7 +55,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </div>
                 <div class="sidebar-item">
                     <a href="../ATM_Locator/atm_locator.html" class="atm-btn">
-                        <img src="https://cdn-icons-png.freepik.com/512/7902/7902099.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                        <img src="https://cdn-icons-png.freepik.com/512/7902/7902099.png" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"
                         alt="atm-btn"
                         onmouseover="this.style.opacity='0.5'" 
                         onmouseout="this.style.opacity='1'" />
@@ -59,7 +63,11 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </div>
                 <div class="sidebar-item">
                     <a href="../Security_Alerts/security-alerts.html" class="security-btn">
-                    <img src="https://cdn0.iconfinder.com/data/icons/security-348/64/1_shield_warning_protected_security_alert-512.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                    <img src="https://cdn0.iconfinder.com/data/icons/security-348/64/1_shield_warning_protected_security_alert-512.png" 
+                    width="30" 
+                    height="30" 
+                    fill="currentColor" 
+                    viewBox="0 0 16 16"
                     alt="security-btn"
                     onmouseover="this.style.opacity='0.5'" 
                     onmouseout="this.style.opacity='1'" />
@@ -69,8 +77,8 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 <div class="footer">
                     <a href="../../Controller/logout.php">
                         <img src="https://cdn-icons-png.freepik.com/512/6968/6968098.png" 
-                            width="20" 
-                            height="20" 
+                            width="40" 
+                            height="40" 
                             alt="logout-btn"
                             style="cursor: pointer;" 
                             onmouseover="this.style.opacity='0.5'" 
@@ -90,7 +98,8 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                         <span class="user-initial"><?php echo substr($user_name, 0, 1); ?></span>
                     </div>
                     <div class="greeting-text">
-                        <h2>Greetings! <a href="../Profile_Management_feature/edit_profile.php" class="user-name-link"><?php echo htmlspecialchars($user_name); ?></a> <span>👋</span></h2>
+                        <h2>Greetings! <a href="../Profile_Management_feature/edit_profile.php" class="user-name-link">
+                            <?php echo htmlspecialchars($user_name); ?></a> <span>👋</span></h2>
                         <p>Start your day with One Bank Solution</p>
                     </div>
                 </div>
@@ -98,8 +107,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 <div class="search-bar">
                     <div class="search-icon">
                         <a href="../../Controller/transfer.php" class="search-btn">
-                            <img src="https://png.pngtree.com/png-vector/20190320/ourmid/pngtree-vector-search-icon-png-image_848679.jpg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
-                            <img src="https://png.pngtree.com/png-vector/20190320/ourmid/pngtree-vector-search-icon-png-image_848679.jpg" 
+                            <img src="https://png.pngtree.com/png-vector/20190320/ourmid/pngtree-vector-search-icon-png-image_848679.jpg"
                             width="20" 
                             height="20" 
                             fill="currentColor" 
@@ -155,13 +163,18 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </a>
 
                 <a href="../Bill_Pay/bill_pay.html" class="action-button">
-                    <img src="https://png.pngtree.com/png-vector/20191016/ourmid/pngtree-one-click-touch-payment-vector-thin-line-icon-png-image_1803310.jpg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                    <img src="https://png.pngtree.com/png-vector/20191016/ourmid/pngtree-one-click-touch-payment-vector-thin-line-icon-png-image_1803310.jpg" 
+                    width="20" 
+                    height="20" 
+                    fill="currentColor" 
+                    viewBox="0 0 16 16"
                     alt="pay-btn"/>
                     Pay Bill
                 </a>
 
                 <a href="../Loan_Application/loan_application.html" class="action-button">
-                    <img src="https://www.vhv.rs/dpng/d/482-4825355_finance-icon-apply-for-a-loan-png-transparent.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
+                    <img src="https://www.vhv.rs/dpng/d/482-4825355_finance-icon-apply-for-a-loan-png-transparent.png" 
+                    width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
                     alt="loan-btn"/>
                     Loan Application
                 </a>
@@ -215,8 +228,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
 
 
         </div>
-
-        <script src="../../JS/dashboard.js"></script>
+        <!-- Footer -->     
         <script src="../../Asset/JS/dashboard.js"></script>
     </body>
 </html>

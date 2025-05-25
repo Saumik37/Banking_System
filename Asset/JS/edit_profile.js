@@ -51,7 +51,7 @@ function initializeAvatarUpload() {
         }
     });
 }
-}
+
 
 // Image resizing function
 function resizeImage(dataURL, maxWidth, maxHeight, quality, callback) {
@@ -475,4 +475,5 @@ function initializeAvatarUpload() {
             };
             reader.readAsDataURL(file);
         }
-    });
+    }); 
+}
