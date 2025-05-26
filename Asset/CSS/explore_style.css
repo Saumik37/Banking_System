@@ -1,0 +1,132 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            height: 600px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            position: relative;
+            background-color: white;
+        }
+
+        .top-section {
+            height: 180px;
+            position: relative;
+        }
+
+        .blue-curve {
+            background-color: #3563E9;
+            width: 600px;
+            height: 280px;
+            border-radius: 50%;
+            position: absolute;
+            top: -150px;
+            left: -110px;
+        }
+
+        .header {
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .back-btn svg {
+            margin-right: 5px;
+        }
+
+        .title {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            width: 75%;
+            margin: 0 auto;
+            margin-top: 35px;
+        }
+
+        .bottom-section {
+            height: calc(100% - 400px);
+            background-color: #0A1B3D;
+            border-radius: 30px;
+            padding: 30px;
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            width: calc(100% - 40px);
+            margin-bottom: 20px;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 50px;
+            border: none;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            margin-bottom: 15px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .login-btn {
+            background-color: #3563E9;
+        }
+
+        .login-btn:hover {
+            background-color: #2953c9;
+        }
+
+        .signup-btn {
+            background-color: transparent;
+            border: 1px solid white;
+        }
+
+        .signup-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .button-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }

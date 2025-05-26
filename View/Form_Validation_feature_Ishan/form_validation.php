@@ -19,7 +19,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == true){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Validation - Login/Registration</title>
+    <title>Login & Registration Portal</title>
     <style>
         /* Global Styles */
         body {
@@ -241,6 +241,8 @@ if(isset($_SESSION['status']) && $_SESSION['status'] == true){
             </fieldset>
         </form>
     </div>
+
+    <script src="../../Asset/JS/form_validation.js"></script>
 
     <script>
         // Function to toggle the visibility of the Login and Register forms

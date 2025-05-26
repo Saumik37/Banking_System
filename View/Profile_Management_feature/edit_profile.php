@@ -40,7 +40,7 @@ $error_message = isset($_GET['error']) ? $_GET['error'] : '';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile</title>
+    <title>Edit Profile Portal</title>
     <link rel="stylesheet" href="../../Asset/CSS/edit_profile.css">
 </head>
 <body>
