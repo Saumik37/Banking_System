@@ -1,8 +1,7 @@
 <?php
 // login_process.php - Controller for processing login data using database
 session_start();
-
-// Include configuration and user functions from Model directory
+// Include necessary files
 require_once '../Model/config.php';
 require_once '../Model/user_functions.php';
 

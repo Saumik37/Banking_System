@@ -12,7 +12,7 @@ $_SESSION['logout_success'] = 'Logged out successfully.';
 
 // Check if this is an AJAX request
 if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-    // Return JSON response for AJAX
+    // Return JSON response for AJAX requests
     header('Content-Type: application/json');
     echo json_encode(['success' => true, 'message' => 'Logged out successfully']);
     exit();

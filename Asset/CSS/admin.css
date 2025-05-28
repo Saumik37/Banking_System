@@ -204,7 +204,7 @@ body {
 }
 
 .data-table {
-    width: 100%;
+    width: 0%;
     border-collapse: collapse;
     margin-top: 1rem;
     background-color: white;
@@ -240,35 +240,6 @@ body {
     font-weight: bold;
 }
 
-.status-active {
-    background-color: #d4edda;
-    color: #155724;
-}
-
-.status-inactive {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.status-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.status-approved {
-    background-color: #d1ecf1;
-    color: #0c5460;
-}
-
-.status-rejected {
-    background-color: #f8d7da;
-    color: #721c24;
-}
-
-.status-flagged {
-    background-color: #fff3cd;
-    color: #856404;
-}
 
 .checkbox-cell {
     width: 40px;
