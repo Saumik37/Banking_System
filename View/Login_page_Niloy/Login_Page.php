@@ -12,8 +12,10 @@
             <div class="blue1-curve"></div>
             <div class="blue2-curve"></div>
             <div class="header">
-                <button class="back-btn" onclick="location.href='../Login_page_Niloy/Explore_Page.html'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button class="back-btn" id="backButton" onclick="window.location.href='Explore_Page.html'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                    stroke-linejoin="round">
                         <path d="M19 12H5"></path>
                         <path d="M12 19l-7-7 7-7"></path>
                     </svg>
@@ -26,25 +28,16 @@
                     height="20" 
                     fill="currentColor" 
                     viewBox="0 0 16 16"
-                    alt="home-btn"
-                    onmouseover="this.style.opacity='0.5'" 
-                    onmouseout="this.style.opacity='1'" />
+                    alt="home-btn" />
                 </div>
             </div>
         </div>
         
         <div class="bottom-section">
-            <?php
-            // Display error message if there is one
-            if (isset($_GET['error'])) {
-                echo '<div id="error" class="error-message">' . htmlspecialchars($_GET['error']) . '</div>';
-            }
-            
-            // Display success message if there is one
-            if (isset($_GET['success'])) {
-                echo '<div id="success" class="success-message">' . htmlspecialchars($_GET['success']) . '</div>';
-            }
-            ?>
+            <div id="messageContainer">
+                <div id="error" class="error-message" style="display: none;"></div>
+                <div id="success" class="success-message" style="display: none;"></div>
+            </div>
             
             <form id="loginForm" method="post" action="../../Controller/login_process.php" novalidate>
                 <div class="form-group">
@@ -54,7 +47,6 @@
                         id="email" 
                         name="email" 
                         placeholder="Enter your email..." 
-                        value="<?php echo isset($_GET['email']) ? htmlspecialchars($_GET['email']) : ''; ?>"
                         autocomplete="email"
                         required
                     >
@@ -83,13 +75,13 @@
             <div class="social-login">
                 <div class="divider">Or continue with</div>
                 <div class="social-container">
-                    <div class="social-btn" title="Login with Google">
+                    <div class="social-btn" title="Login with Google" id="googleLogin">
                         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" width="30" height="30" />
                     </div>
-                    <div class="social-btn" title="Login with Facebook">
+                    <div class="social-btn" title="Login with Facebook" id="facebookLogin">
                         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" alt="Facebook" width="30" height="30" />
                     </div>
-                    <div class="social-btn" title="Login with Apple">
+                    <div class="social-btn" title="Login with Apple" id="appleLogin">
                         <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apple/apple-original.svg" alt="Apple" width="30" height="30" />
                     </div>
                 </div>

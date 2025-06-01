@@ -8,8 +8,10 @@
     <div class="main-container">
         <div class="header">
             <div class="header-content">
-                <button class="back-button" onclick="location.href='../Login_page_Niloy/Explore_Page.html'">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button class="back-button" id="backButton" onclick="window.location.href='../Login_page_Niloy/Explore_Page.html'">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                    stroke-linejoin="round">
                         <path d="M19 12H5"></path>
                         <path d="M12 19l-7-7 7-7"></path>
                     </svg>
@@ -23,48 +25,45 @@
                 height="20" 
                 fill="currentColor" 
                 viewBox="0 0 16 16"
-                alt="home-btn"
-                onmouseover="this.style.opacity='0.5'" 
-                onmouseout="this.style.opacity='1'" />
+                alt="home-btn" />
             </div>
         </div>
         
         <div class="form-container">
-            <!-- Fixed form action path -->
             <form id="signupForm" method="post" action="/Banking_System/Controller/signup_process.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="firstname">First Name:</label>
-                    <input type="text" id="firstname" name="firstname" placeholder="Type here..." value="<?php echo isset($_GET['firstname']) ? htmlspecialchars($_GET['firstname']) : ''; ?>" />
+                    <input type="text" id="firstname" name="firstname" placeholder="Type here..." />
                 </div>
 
                 <div class="form-group">
                     <label for="lastname">Last Name:</label>
-                    <input type="text" id="lastname" name="lastname" placeholder="Type here..." value="<?php echo isset($_GET['lastname']) ? htmlspecialchars($_GET['lastname']) : ''; ?>" />
+                    <input type="text" id="lastname" name="lastname" placeholder="Type here..." />
                 </div>
 
                 <div class="form-group">
                     <label for="nid">NID:</label>
-                    <input type="number" id="nid" name="nid" placeholder="Type here..." value="<?php echo isset($_GET['nid']) ? htmlspecialchars($_GET['nid']) : ''; ?>" />
+                    <input type="number" id="nid" name="nid" placeholder="Type here..." />
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" placeholder="Type here..." value="<?php echo isset($_GET['email']) ? htmlspecialchars($_GET['email']) : ''; ?>" />
+                    <input type="email" id="email" name="email" placeholder="Type here..." />
                 </div>
 
                 <div class="form-group">
                     <label>Gender:</label>
                     <div class="radio-group">
                         <div class="radio-option">
-                            <input type="radio" name="gender" id="male" value="Male" <?php if(isset($_GET['gender']) && $_GET['gender'] === "Male") echo "checked"; ?>>
+                            <input type="radio" name="gender" id="male" value="Male">
                             <label for="male">Male</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" name="gender" id="female" value="Female" <?php if(isset($_GET['gender']) && $_GET['gender'] === "Female") echo "checked"; ?>>
+                            <input type="radio" name="gender" id="female" value="Female">
                             <label for="female">Female</label>
                         </div>
                         <div class="radio-option">
-                            <input type="radio" name="gender" id="other" value="Other" <?php if(isset($_GET['gender']) && $_GET['gender'] === "Other") echo "checked"; ?>>
+                            <input type="radio" name="gender" id="other" value="Other">
                             <label for="other">Other</label>
                         </div>
                     </div>
@@ -72,7 +71,7 @@
 
                 <div class="form-group">
                     <label for="address">Address:</label>
-                    <input type="text" id="address" name="address" placeholder="Type here..." value="<?php echo isset($_GET['address']) ? htmlspecialchars($_GET['address']) : ''; ?>" />
+                    <input type="text" id="address" name="address" placeholder="Type here..." />
                 </div>
 
                 <div class="form-group">
@@ -85,13 +84,10 @@
                     <button type="button" id="resetBtn">Reset</button>
                 </div>
                 
-                <?php if(isset($_GET['error']) && !empty($_GET['error'])): ?>
-                    <p id="error"><?php echo htmlspecialchars($_GET['error']); ?></p>
-                <?php endif; ?>
-                
-                <?php if(isset($_GET['success']) && !empty($_GET['success'])): ?>
-                    <p id="success" class="success-message"><?php echo htmlspecialchars($_GET['success']); ?></p>
-                <?php endif; ?>
+                <div id="messageContainer">
+                    <p id="error" class="error-message" style="display: none;"></p>
+                    <p id="success" class="success-message" style="display: none;"></p>
+                </div>
             </form>
         </div>
     </div>

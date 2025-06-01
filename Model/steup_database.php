@@ -1,18 +1,13 @@
 <?php
-// setup_database.php - Run this file once to set up your database
-// Place this in your Model/ directory and run it through browser: localhost/your_project/Model/setup_database.php
 
-// Direct database connection
 $con = mysqli_connect('127.0.0.1', 'root', '', 'webtech');
 
-// Check connection
 if (!$con) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
 echo "<h2>Database Setup</h2>";
 
-// Create users table with updated structure
 $sql = "CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     firstname VARCHAR(50) NOT NULL,
@@ -32,66 +27,12 @@ if (mysqli_query($con, $sql)) {
     echo "<p style='color: red;'>✗ Error creating table: " . mysqli_error($con) . "</p>";
 }
 
-// Check if any users exist
 $sql = "SELECT COUNT(*) as count FROM users";
 $result = mysqli_query($con, $sql);
 $row = mysqli_fetch_assoc($result);
 
-if ($row['count'] == 0) {
-    // Insert sample users for testing
-    $sample_users = [
-        [
-            'firstname' => 'John',
-            'lastname' => 'Doe',
-            'nid' => '1234567890',
-            'email' => 'john@example.com',
-            'address' => '123 Main Street, Dhaka, Bangladesh',
-            'password' => password_hash('password123', PASSWORD_DEFAULT),
-            'gender' => 'Male'
-        ],
-        [
-            'firstname' => 'Jane',
-            'lastname' => 'Smith',
-            'nid' => '0987654321',
-            'email' => 'jane@example.com',
-            'address' => '456 Oak Avenue, Chittagong, Bangladesh',
-            'password' => password_hash('password123', PASSWORD_DEFAULT),
-            'gender' => 'Female'
-        ],
-        [
-            'firstname' => 'AIUB',
-            'lastname' => 'Student',
-            'nid' => '1122334455',
-            'email' => 'student@aiub.edu',
-            'address' => 'AIUB Campus, Tejgaon, Dhaka, Bangladesh',
-            'password' => password_hash('password123', PASSWORD_DEFAULT),
-            'gender' => 'Other'
-        ]
-    ];
-    
-    foreach ($sample_users as $user) {
-        $sql = "INSERT INTO users (firstname, lastname, nid, email, address, password, gender) VALUES 
-                ('{$user['firstname']}', '{$user['lastname']}', '{$user['nid']}', '{$user['email']}', '{$user['address']}', '{$user['password']}', '{$user['gender']}')";
-        
-        if (mysqli_query($con, $sql)) {
-            echo "<p style='color: green;'>✓ Sample user '{$user['email']}' created</p>";
-        } else {
-            echo "<p style='color: red;'>✗ Error creating user '{$user['email']}': " . mysqli_error($con) . "</p>";
-        }
-    }
-    
-    echo "<h3>Test Users Created:</h3>";
-    echo "<ul>";
-    echo "<li><strong>Email:</strong> john@example.com <strong>Password:</strong> password123 <strong>NID:</strong> 1234567890</li>";
-    echo "<li><strong>Email:</strong> jane@example.com <strong>Password:</strong> password123 <strong>NID:</strong> 0987654321</li>";
-    echo "<li><strong>Email:</strong> student@aiub.edu <strong>Password:</strong> password123 <strong>NID:</strong> 1122334455</li>";
-    echo "</ul>";
-    
-} else {
-    echo "<p style='color: blue;'>ℹ Users table already has {$row['count']} users</p>";
-}
+echo "<p style='color: blue;'>ℹ Users table has {$row['count']} users</p>";
 
-// Display current users in table format
 echo "<h3>Current Users in Database:</h3>";
 $sql1 = "SELECT * FROM users ORDER BY created_at DESC";
 $result = mysqli_query($con, $sql1);

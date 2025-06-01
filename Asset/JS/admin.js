@@ -1,117 +1,169 @@
-// admin_modal.js - Handle modal functionality
+let currentFilters = {};
+let currentPage = 1;
 
-// Modal functions
 function openModal(modalId) {
-    document.getElementById(modalId).style.display = 'block';
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'block';
+    }
 }
 
 function closeModal(modalId) {
-    document.getElementById(modalId).style.display = 'none';
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+    
     if (modalId === 'userModal') {
-        document.getElementById('userForm').reset();
-        document.getElementById('formAction').value = 'add_user';
-        document.getElementById('modalTitle').textContent = 'Add New User';
-        // Reset password field visibility
-        document.getElementById('password').style.display = 'block';
-        document.getElementById('password').previousElementSibling.style.display = 'block';
-        document.getElementById('password').required = true;
+        const userForm = document.getElementById('userForm');
+        const formAction = document.getElementById('formAction');
+        const modalTitle = document.getElementById('modalTitle');
+        const passwordField = document.getElementById('password');
+        
+        if (userForm) userForm.reset();
+        if (formAction) formAction.value = 'add_user';
+        if (modalTitle) modalTitle.textContent = 'Add New User';
+        
+        if (passwordField) {
+            passwordField.style.display = 'block';
+            passwordField.required = true;
+            const passwordLabel = passwordField.previousElementSibling;
+            if (passwordLabel) passwordLabel.style.display = 'block';
+        }
     }
 }
 
-// User management functions
 function deleteUser(id) {
-    if (confirm('Are you sure you want to delete this user?')) {
-        const formData = new FormData();
-        formData.append('action', 'delete_user');
-        formData.append('id', id);
-
-        fetch('', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.message);
-            if (data.success) {
-                // Refresh current view with filters
-                if (Object.keys(currentFilters).length > 0) {
-                    applyFilters(currentPage);
-                } else {
-                    location.reload();
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while deleting the user.');
-        });
+    if (!confirm('Are you sure you want to delete this user?')) {
+        return;
     }
+    
+    const formData = new FormData();
+    formData.append('action', 'delete_user');
+    formData.append('id', id);
+
+    fetch('', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message || 'Operation completed');
+        if (data.success) {
+            refreshView();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the user.');
+    });
 }
 
 function editUser(id) {
-    // Find the user row
-    const row = document.querySelector(`button[onclick="editUser(${id})"]`).closest('tr');
+    const editButton = document.querySelector(`button[onclick="editUser(${id})"]`);
+    if (!editButton) {
+        alert('User not found');
+        return;
+    }
+    
+    const row = editButton.closest('tr');
+    if (!row) {
+        alert('User data not found');
+        return;
+    }
+    
     const cells = row.getElementsByTagName('td');
+    if (cells.length < 7) {
+        alert('Incomplete user data');
+        return;
+    }
     
-    // Populate the form
-    document.getElementById('userId').value = id;
-    document.getElementById('firstname').value = cells[1].textContent;
-    document.getElementById('lastname').value = cells[2].textContent;
-    document.getElementById('nid').value = cells[3].textContent;
-    document.getElementById('email').value = cells[4].textContent;
-    document.getElementById('address').value = cells[5].textContent;
-    document.getElementById('gender').value = cells[6].textContent;
+    const userIdField = document.getElementById('userId');
+    const firstnameField = document.getElementById('firstname');
+    const lastnameField = document.getElementById('lastname');
+    const nidField = document.getElementById('nid');
+    const emailField = document.getElementById('email');
+    const addressField = document.getElementById('address');
+    const genderField = document.getElementById('gender');
+    const passwordField = document.getElementById('password');
+    const formAction = document.getElementById('formAction');
+    const modalTitle = document.getElementById('modalTitle');
     
-    // Hide password field for editing
-    document.getElementById('password').style.display = 'none';
-    document.getElementById('password').previousElementSibling.style.display = 'none';
-    document.getElementById('password').required = false;
+    if (userIdField) userIdField.value = id;
+    if (firstnameField) firstnameField.value = cells[1].textContent.trim();
+    if (lastnameField) lastnameField.value = cells[2].textContent.trim();
+    if (nidField) nidField.value = cells[3].textContent.trim();
+    if (emailField) emailField.value = cells[4].textContent.trim();
+    if (addressField) addressField.value = cells[5].textContent.trim();
+    if (genderField) genderField.value = cells[6].textContent.trim();
     
-    // Update form action and modal title
-    document.getElementById('formAction').value = 'update_user';
-    document.getElementById('modalTitle').textContent = 'Edit User';
+    if (passwordField) {
+        passwordField.style.display = 'none';
+        passwordField.required = false;
+        const passwordLabel = passwordField.previousElementSibling;
+        if (passwordLabel) passwordLabel.style.display = 'none';
+    }
+    
+    if (formAction) formAction.value = 'update_user';
+    if (modalTitle) modalTitle.textContent = 'Edit User';
     
     openModal('userModal');
 }
 
-// Form submission handler
+function refreshView() {
+    if (currentFilters && Object.keys(currentFilters).length > 0 && typeof applyFilters === 'function') {
+        applyFilters(currentPage);
+    } else {
+        location.reload();
+    }
+}
+
+function handleFormSubmission(form) {
+    const formData = new FormData(form);
+    
+    fetch('', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        alert(data.message || 'Operation completed');
+        if (data.success) {
+            closeModal('userModal');
+            refreshView();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while saving the user.');
+    });
+}
+
+function handleModalClick(event) {
+    const modal = document.getElementById('userModal');
+    if (modal && event.target === modal) {
+        closeModal('userModal');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const userForm = document.getElementById('userForm');
     if (userForm) {
         userForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const formData = new FormData(this);
-            
-            fetch('', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-                if (data.success) {
-                    closeModal('userModal');
-                    // Refresh current view with filters
-                    if (Object.keys(currentFilters).length > 0) {
-                        applyFilters(currentPage);
-                    } else {
-                        location.reload();
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while saving the user.');
-            });
+            handleFormSubmission(this);
         });
     }
+    
+    window.addEventListener('click', handleModalClick);
 });
-
-// Close modal when clicking outside
-window.onclick = function(event) {
-    const modal = document.getElementById('userModal');
-    if (event.target == modal) {
-        closeModal('userModal');
-    }
-}

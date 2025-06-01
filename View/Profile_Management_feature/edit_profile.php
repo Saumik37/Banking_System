@@ -1,13 +1,11 @@
 <?php
 session_start();
 
-// Check if user is logged in
 if (!isset($_SESSION['status']) || $_SESSION['status'] !== true) {
     header("Location: ../Login_page_Niloy/Login_Page.php");
     exit();
 }
 
-// Get current user data
 $current_user = null;
 if (isset($_SESSION['users']) && isset($_SESSION['user_email'])) {
     foreach ($_SESSION['users'] as $user) {
@@ -18,7 +16,6 @@ if (isset($_SESSION['users']) && isset($_SESSION['user_email'])) {
     }
 }
 
-// Default values if user not found in session
 if (!$current_user) {
     $current_user = [
         'firstname' => $_SESSION['user_firstname'] ?? 'User',
@@ -30,7 +27,6 @@ if (!$current_user) {
     ];
 }
 
-// Handle form submission messages
 $success_message = isset($_GET['success']) ? $_GET['success'] : '';
 $error_message = isset($_GET['error']) ? $_GET['error'] : '';
 ?>
@@ -70,38 +66,38 @@ $error_message = isset($_GET['error']) ? $_GET['error'] : '';
 
         <div class="form-section">
             <?php if ($success_message): ?>
-                <div class="alert alert-success"><?php echo htmlspecialchars($success_message); ?></div>
+                <div class="alert alert-success"><?php echo $success_message; ?></div>
             <?php endif; ?>
             
             <?php if ($error_message): ?>
-                <div class="alert alert-error"><?php echo htmlspecialchars($error_message); ?></div>
+                <div class="alert alert-error"><?php echo $error_message; ?></div>
             <?php endif; ?>
 
             <form id="edit-profile-form" method="POST" action="../../Controller/edit_profile_session.php" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="firstname">First Name</label>
-                    <input type="text" id="firstname" name="firstname" value="<?php echo htmlspecialchars($current_user['firstname']); ?>" required>
+                    <input type="text" id="firstname" name="firstname" value="<?php echo $current_user['firstname']; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="lastname">Last Name</label>
-                    <input type="text" id="lastname" name="lastname" value="<?php echo htmlspecialchars($current_user['lastname']); ?>" required>
+                    <input type="text" id="lastname" name="lastname" value="<?php echo $current_user['lastname']; ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($current_user['email']); ?>" readonly>
+                    <input type="email" id="email" name="email" value="<?php echo $current_user['email']; ?>" readonly>
                     <small class="help-text">Email cannot be changed</small>
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
-                    <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars($current_user['phone'] ?? ''); ?>">
+                    <input type="tel" id="phone" name="phone" value="<?php echo $current_user['phone'] ?? ''; ?>">
                 </div>
 
                 <div class="form-group">
                     <label for="address">Address</label>
-                    <textarea id="address" name="address" rows="3"><?php echo htmlspecialchars($current_user['address'] ?? ''); ?></textarea>
+                    <textarea id="address" name="address" rows="3"><?php echo $current_user['address'] ?? ''; ?></textarea>
                 </div>
 
                 <input type="hidden" id="avatar-data" name="avatar_data">
@@ -114,7 +110,6 @@ $error_message = isset($_GET['error']) ? $_GET['error'] : '';
         </div>
     </div>
 
-    <!-- Password Change Modal -->
     <div id="password-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">

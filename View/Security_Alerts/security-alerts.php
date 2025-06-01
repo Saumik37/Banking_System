@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['status']) || $_SESSION['status'] !== true) {
+    header("Location: ../Login_page_Niloy/Login_Page.php");
+    exit();
+}
+
+$current_user = $_SESSION['user_email'] ?? 'User';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,7 +31,6 @@
         </header>
 
         <main>
-            <!-- Notifications Center -->
             <section id="notifications" class="tab-content active">
                 <h2>Fraud Alert Notifications</h2>
                 <div class="alert-controls">
@@ -33,11 +43,9 @@
                     </select>
                 </div>
                 <div class="notifications-list">
-                    <!-- Alerts will be populated here -->
                 </div>
             </section>
 
-            <!-- Activity Review -->
             <section id="activity" class="tab-content">
                 <h2>Login Activity Review</h2>
                 <fieldset>
@@ -77,7 +85,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Activity logs will be populated here -->
                     </tbody>
                 </table>
                 
@@ -87,7 +94,6 @@
                 </div>
             </section>
 
-            <!-- Report Panel -->
             <section id="report" class="tab-content">
                 <h2>Report Suspicious Activity</h2>
                 <form id="reportForm">
@@ -132,14 +138,13 @@
                 <div class="report-history">
                     <h3>Recent Reports</h3>
                     <ul id="reportHistory">
-                        <!-- Report history will be populated here -->
                     </ul>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>Security Alerts System &copy; 2025</p>
+            <p>Security Alerts System &copy; <?php echo date('Y'); ?></p>
         </footer>
     </div>
 
@@ -155,7 +160,7 @@
         </div>
     </div>
 
-    <div><button id="back-btn" class="back-btn">Back</button></div>
+    <div><button id="back-btn" class="back-btn" onclick="window.history.back()">Back</button></div>
 
     <script src="../../Asset/JS/security-alerts.js"></script>
 </body>

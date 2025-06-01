@@ -1,13 +1,10 @@
 <?php
-// admin_filter_handler.php - Handle AJAX filter requests
 
-// This file should only be included from admin.php after session and database checks
 if (!isset($con) || !$con) {
     echo json_encode(['success' => false, 'message' => 'Database connection error']);
     exit;
 }
 
-// Get filter parameters
 $page = isset($_POST['page']) ? (int)$_POST['page'] : 1;
 $limit = 10;
 $offset = ($page - 1) * $limit;
@@ -18,7 +15,6 @@ $search_lastname = $_POST['search_lastname'] ?? '';
 $search_email = $_POST['search_email'] ?? '';
 $search_gender = $_POST['search_gender'] ?? '';
 
-// Build WHERE conditions
 if (!empty($search_firstname)) {
     $where_conditions[] = "firstname LIKE '%" . mysqli_real_escape_string($con, $search_firstname) . "%'";
 }
@@ -34,7 +30,6 @@ if (!empty($search_gender)) {
 
 $where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
 
-// Get total count for pagination
 $count_sql = "SELECT COUNT(*) as total FROM User_Table $where_clause";
 $count_result = mysqli_query($con, $count_sql);
 
@@ -46,7 +41,6 @@ if (!$count_result) {
 $total_users = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_users / $limit);
 
-// Fetch filtered users
 $sql = "SELECT * FROM User_Table $where_clause ORDER BY id DESC LIMIT $limit OFFSET $offset";
 $result = mysqli_query($con, $sql);
 
@@ -55,7 +49,6 @@ if (!$result) {
     exit;
 }
 
-// Build table HTML
 $table_html = '';
 while ($row = mysqli_fetch_assoc($result)) {
     $table_html .= '<tr>';
@@ -73,23 +66,18 @@ while ($row = mysqli_fetch_assoc($result)) {
     $table_html .= '</tr>';
 }
 
-// Build pagination HTML
 $pagination_html = '';
 
-// Previous button
 if ($page > 1) {
     $pagination_html .= '<button class="btn btn-secondary" onclick="loadPage(' . ($page - 1) . ')">Previous</button>';
 }
 
-// Page info
 $pagination_html .= '<span class="page-info">Page ' . $page . ' of ' . $total_pages . ' (' . $total_users . ' total users)</span>';
 
-// Next button
 if ($page < $total_pages) {
     $pagination_html .= '<button class="btn btn-secondary" onclick="loadPage(' . ($page + 1) . ')">Next</button>';
 }
 
-// Return JSON response
 echo json_encode([
     'success' => true,
     'table_html' => $table_html,

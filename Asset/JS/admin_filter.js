@@ -1,12 +1,7 @@
-// admin_filter.js - Handle filter functionality with AJAX
-
-// Current page state
 let currentPage = 1;
 let currentFilters = {};
 
-// Apply filters function - AJAX implementation
 function applyFilters(page = 1) {
-    // Get filter values
     const filters = {
         action: 'filter_users',
         page: page,
@@ -16,20 +11,16 @@ function applyFilters(page = 1) {
         search_gender: document.getElementById('search_gender').value
     };
     
-    // Store current filters for pagination
     currentFilters = { ...filters };
     currentPage = page;
     
-    // Create FormData for POST request
     const formData = new FormData();
     Object.keys(filters).forEach(key => {
         formData.append(key, filters[key]);
     });
     
-    // Show loading state
     showLoadingState();
     
-    // Make AJAX request
     fetch('', {
         method: 'POST',
         body: formData
@@ -52,15 +43,10 @@ function applyFilters(page = 1) {
     });
 }
 
-
-
-// Load specific page function
 function loadPage(page) {
     if (Object.keys(currentFilters).length > 0) {
-        // If filters are applied, use them
         applyFilters(page);
     } else {
-        // If no filters, just change page
         const formData = new FormData();
         formData.append('action', 'filter_users');
         formData.append('page', page);
@@ -95,7 +81,6 @@ function loadPage(page) {
     }
 }
 
-// Update table content
 function updateTable(tableHtml) {
     const tableBody = document.getElementById('usersTableBody');
     if (tableBody) {
@@ -103,7 +88,6 @@ function updateTable(tableHtml) {
     }
 }
 
-// Update pagination content
 function updatePagination(paginationHtml) {
     const paginationContainer = document.getElementById('paginationContainer');
     if (paginationContainer) {
@@ -111,14 +95,12 @@ function updatePagination(paginationHtml) {
     }
 }
 
-// Show loading state
 function showLoadingState() {
     const tableBody = document.getElementById('usersTableBody');
     if (tableBody) {
         tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 20px;">Loading...</td></tr>';
     }
     
-    // Disable filter button
     const filterButton = document.querySelector('.btn.btn-primary[onclick="applyFilters()"]');
     if (filterButton) {
         filterButton.disabled = true;
@@ -126,9 +108,7 @@ function showLoadingState() {
     }
 }
 
-// Hide loading state
 function hideLoadingState() {
-    // Re-enable filter button
     const filterButton = document.querySelector('.btn.btn-primary');
     if (filterButton && filterButton.textContent === 'Applied') {
         filterButton.disabled = false;
@@ -136,7 +116,6 @@ function hideLoadingState() {
     }
 }
 
-// Event listeners for Enter key on filter inputs
 document.addEventListener('DOMContentLoaded', function() {
     const filterInputs = [
         'search_firstname',
@@ -156,21 +135,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
-    
 });
 
-// Clear filters function
 function clearFilters() {
-    // Clear form inputs
     document.getElementById('search_firstname').value = '';
     document.getElementById('search_lastname').value = '';
     document.getElementById('search_email').value = '';
     document.getElementById('search_gender').value = '';
     
-    // Reset current filters and page
     currentFilters = {};
     currentPage = 1;
     
-    // Apply filters to show all users
     applyFilters(1);
 }

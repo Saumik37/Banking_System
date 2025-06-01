@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['status']) || $_SESSION['status'] !== true) {
+    header("Location: ../Login_page_Niloy/Login_Page.php");
+    exit();
+}
+
+$current_user = $_SESSION['user_firstname'] ?? 'User';
+?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,8 +18,8 @@
 <body>
     <h1>Card Management Portal</h1>
     <div>
-        <h2>Welcome, User!</h2>
-        <p>Manage your cards and set preferences for alerts and controls.</p>
+        <h2>Welcome, <?php echo $current_user; ?>!</h2>
+        <p>Manage your cards and set preferences.</p>
     </div>                         
     <div class="tab-container">
         <div class="tabs">
@@ -21,39 +32,13 @@
             <h2>Card Controls</h2>
             
             <div class="card-list">
-                <div class="card-item">
-                    <div class="card-details">
-                        <h3>Visa Platinum **** 5678</h3>
-                        <p>Exp: 09/28</p>
-                        <div class="card-status active">Active</div>
-                    </div>
-                    <div class="card-actions">
-                        <button class="freeze-btn">Temporarily Freeze</button>
-                        <button class="report-btn">Report Lost/Stolen</button>
-                        <button class="limits-btn">Set Spending Limits</button>
-                    </div>
-                </div>
-                
-                <div class="card-item">
-                    <div class="card-details">
-                        <h3>Mastercard Gold **** 9012</h3>
-                        <p>Exp: 03/27</p>
-                        <div class="card-status frozen">Frozen</div>
-                    </div>
-                    <div class="card-actions">
-                        <button class="unfreeze-btn">Unfreeze Card</button>
-                        <button class="report-btn">Report Lost/Stolen</button>
-                        <button class="limits-btn">Set Spending Limits</button>
-                    </div>
-                </div>
             </div>
             
-            <!-- Spending Limits Modal -->
             <div id="spending-limits-modal" class="modal">
                 <div class="modal-content">
                     <span class="close-modal">&times;</span>
                     <h3>Set Spending Limits</h3>
-                    <p>Card: <span id="limit-card-name">Visa Platinum **** 5678</span></p>
+                    <p>Card: <span id="limit-card-name"></span></p>
                     
                     <form id="spending-limits-form">
                         <div class="form-group">
@@ -77,12 +62,11 @@
                 </div>
             </div>
             
-            <!-- Report Card Modal -->
             <div id="report-card-modal" class="modal">
                 <div class="modal-content">
                     <span class="close-modal">&times;</span>
-                    <h3>Report Lost or Stolen Card</h3>
-                    <p>Card: <span id="report-card-name">Visa Platinum **** 5678</span></p>
+                    <h3>Report Card</h3>
+                    <p>Card: <span id="report-card-name"></span></p>
                     
                     <form id="report-card-form">
                         <div class="form-group">
@@ -94,8 +78,8 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="report-details">Additional Details:</label>
-                            <textarea id="report-details" rows="4" placeholder="Please provide any relevant details"></textarea>
+                            <label for="report-details">Details:</label>
+                            <textarea id="report-details" rows="4" placeholder="Provide details"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="replacement">Request Replacement?</label>
@@ -115,30 +99,19 @@
                     <div class="form-group">
                         <label for="card-select">Select Card:</label>
                         <select id="card-select">
-                            <option value="visa-5678">Visa Platinum **** 5678</option>
-                            <option value="mc-9012">Mastercard Gold **** 9012</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="current-pin">Current PIN:</label>
-                        <input type="password" id="current-pin" maxlength="4" placeholder="Enter current PIN">
+                        <input type="password" id="current-pin" maxlength="4" placeholder="Current PIN">
                     </div>
                     <div class="form-group">
                         <label for="new-pin">New PIN:</label>
-                        <input type="password" id="new-pin" maxlength="4" placeholder="Enter new PIN">
+                        <input type="password" id="new-pin" maxlength="4" placeholder="New PIN">
                     </div>
                     <div class="form-group">
                         <label for="confirm-pin">Confirm New PIN:</label>
-                        <input type="password" id="confirm-pin" maxlength="4" placeholder="Confirm new PIN">
-                    </div>
-                    <div class="pin-guidelines">
-                        <h4>PIN Guidelines:</h4>
-                        <ul>
-                            <li>Must be 4 digits</li>
-                            <li>Cannot be sequential numbers (e.g., 1234)</li>
-                            <li>Cannot be four identical digits (e.g., 1111)</li>
-                            <li>Cannot be your birth year</li>
-                        </ul>
+                        <input type="password" id="confirm-pin" maxlength="4" placeholder="Confirm PIN">
                     </div>
                     <button type="submit" class="submit-btn">Change PIN</button>
                 </form>
@@ -169,7 +142,7 @@
                         </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="large-purchases" checked>
-                            <label for="large-purchases">Purchases over $500</label>
+                            <label for="large-purchases">Large purchases</label>
                         </div>
                         <div class="checkbox-item">
                             <input type="checkbox" id="online-purchases" checked>
@@ -202,37 +175,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>2025-05-15</td>
-                            <td>Visa Platinum **** 5678</td>
-                            <td class="alert-high">Suspicious Activity</td>
-                            <td>International transaction detected in France</td>
-                            <td><button class="resolve-btn">Resolve</button></td>
-                        </tr>
-                        <tr>
-                            <td>2025-05-14</td>
-                            <td>Mastercard Gold **** 9012</td>
-                            <td class="alert-medium">Large Purchase</td>
-                            <td>Transaction of $750 at Electronics Store</td>
-                            <td><button class="resolve-btn">Resolve</button></td>
-                        </tr>
-                        <tr>
-                            <td>2025-05-10</td>
-                            <td>Visa Platinum **** 5678</td>
-                            <td class="alert-low">Unusual Time</td>
-                            <td>Transaction at 3:15 AM at Gas Station</td>
-                            <td><button class="resolved-btn" disabled>Resolved</button></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
     <footer>
-        <p>&copy; 2025 Card Management Portal. All rights reserved.</p>
-        <p>For assistance, contact customer.</p>
+        <p>&copy; <?php echo date('Y'); ?> Card Management Portal. All rights reserved.</p>
     </footer>       
-    <div><button id="back-btn" class="back-btn">Back</button></div>       
+    <div><button id="back-btn" class="back-btn" onclick="window.history.back()">Back</button></div>       
 
     <script src="../../Asset/JS/card_management.js"></script>
 </body>

@@ -1,367 +1,342 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Tab Navigation
+    initializeTabNavigation();
+    initializeCardControls();
+    initializeModals();
+    initializeBackButton();
+    initializeForms();
+});
+
+function initializeTabNavigation() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
     
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const tabId = button.getAttribute('data-tab');
+            const targetContent = document.getElementById(tabId);
             
-            // Remove active class from all tabs and contents
+            if (!targetContent) return;
+            
             tabButtons.forEach(btn => btn.classList.remove('active'));
             tabContents.forEach(content => content.classList.remove('active'));
             
-            // Add active class to selected tab and content
             button.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
+            targetContent.classList.add('active');
         });
     });
-    
-    // Card Controls - Freeze/Unfreeze Card
+}
+
+function initializeCardControls() {
     const freezeButtons = document.querySelectorAll('.freeze-btn');
     const unfreezeButtons = document.querySelectorAll('.unfreeze-btn');
     
     freezeButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const cardItem = this.closest('.card-item');
-            const cardStatus = cardItem.querySelector('.card-status');
-            const cardName = cardItem.querySelector('h3').textContent;
-            
-            // Change status to frozen
-            cardStatus.textContent = 'Frozen';
-            cardStatus.classList.remove('active');
-            cardStatus.classList.add('frozen');
-            
-            // Change button to unfreeze
-            this.outerHTML = '<button class="unfreeze-btn">Unfreeze Card</button>';
-            
-            // Add event listener to new button
-            const newButton = cardItem.querySelector('.unfreeze-btn');
-            newButton.addEventListener('click', unfreezeCard);
-            
-            // Show confirmation
-            showToast(`${cardName} has been temporarily frozen`);
-            
-            // Send freeze status to server (would be implemented in real app)
-            sendCardStatusToServer(cardName, 'freeze');
-        });
+        button.addEventListener('click', handleFreezeCard);
     });
     
     unfreezeButtons.forEach(button => {
-        button.addEventListener('click', unfreezeCard);
+        button.addEventListener('click', handleUnfreezeCard);
     });
     
-    function unfreezeCard() {
-        const cardItem = this.closest('.card-item');
-        const cardStatus = cardItem.querySelector('.card-status');
-        const cardName = cardItem.querySelector('h3').textContent;
-        
-        // Change status to active
-        cardStatus.textContent = 'Active';
-        cardStatus.classList.remove('frozen');
-        cardStatus.classList.add('active');
-        
-        // Change button to freeze
-        this.outerHTML = '<button class="freeze-btn">Temporarily Freeze</button>';
-        
-        // Add event listener to new button
-        const newButton = cardItem.querySelector('.freeze-btn');
-        newButton.addEventListener('click', function() {
-            const cardItem = this.closest('.card-item');
-            const cardStatus = cardItem.querySelector('.card-status');
-            const cardName = cardItem.querySelector('h3').textContent;
-            
-            // Change status to frozen
-            cardStatus.textContent = 'Frozen';
-            cardStatus.classList.remove('active');
-            cardStatus.classList.add('frozen');
-            
-            // Change button to unfreeze
-            this.outerHTML = '<button class="unfreeze-btn">Unfreeze Card</button>';
-            
-            // Add event listener to new button
-            const newButton = cardItem.querySelector('.unfreeze-btn');
-            newButton.addEventListener('click', unfreezeCard);
-            
-            // Show confirmation
-            showToast(`${cardName} has been temporarily frozen`);
-            
-            // Send freeze status to server (would be implemented in real app)
-            sendCardStatusToServer(cardName, 'freeze');
-        });
-        
-        // Show confirmation
-        showToast(`${cardName} has been unfrozen`);
-        
-        // Send unfreeze status to server (would be implemented in real app)
-        sendCardStatusToServer(cardName, 'unfreeze');
-    }
-    
-    // Card Controls - Set Spending Limits
     const limitsButtons = document.querySelectorAll('.limits-btn');
+    limitsButtons.forEach(button => {
+        button.addEventListener('click', handleLimitsButton);
+    });
+    
+    const reportButtons = document.querySelectorAll('.report-btn');
+    reportButtons.forEach(button => {
+        button.addEventListener('click', handleReportButton);
+    });
+    
+    const resolveButtons = document.querySelectorAll('.resolve-btn');
+    resolveButtons.forEach(button => {
+        button.addEventListener('click', handleResolveAlert);
+    });
+}
+
+function handleFreezeCard() {
+    const cardItem = this.closest('.card-item');
+    if (!cardItem) return;
+    
+    const cardStatus = cardItem.querySelector('.card-status');
+    const cardNameElement = cardItem.querySelector('h3');
+    
+    if (!cardStatus || !cardNameElement) return;
+    
+    const cardName = cardNameElement.textContent;
+    
+    cardStatus.textContent = 'Frozen';
+    cardStatus.classList.remove('active');
+    cardStatus.classList.add('frozen');
+    
+    const newButton = document.createElement('button');
+    newButton.className = 'unfreeze-btn';
+    newButton.textContent = 'Unfreeze Card';
+    newButton.addEventListener('click', handleUnfreezeCard);
+    
+    this.parentNode.replaceChild(newButton, this);
+    
+    showToast(`${cardName} has been temporarily frozen`);
+}
+
+function handleUnfreezeCard() {
+    const cardItem = this.closest('.card-item');
+    if (!cardItem) return;
+    
+    const cardStatus = cardItem.querySelector('.card-status');
+    const cardNameElement = cardItem.querySelector('h3');
+    
+    if (!cardStatus || !cardNameElement) return;
+    
+    const cardName = cardNameElement.textContent;
+    
+    cardStatus.textContent = 'Active';
+    cardStatus.classList.remove('frozen');
+    cardStatus.classList.add('active');
+    
+    const newButton = document.createElement('button');
+    newButton.className = 'freeze-btn';
+    newButton.textContent = 'Temporarily Freeze';
+    newButton.addEventListener('click', handleFreezeCard);
+    
+    this.parentNode.replaceChild(newButton, this);
+    
+    showToast(`${cardName} has been unfrozen`);
+}
+
+function handleLimitsButton() {
+    const cardItem = this.closest('.card-item');
     const spendingLimitsModal = document.getElementById('spending-limits-modal');
     const limitCardName = document.getElementById('limit-card-name');
-    const spendingLimitsForm = document.getElementById('spending-limits-form');
     
-    limitsButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const cardItem = this.closest('.card-item');
-            const cardName = cardItem.querySelector('h3').textContent;
-            
-            // Set card name in modal
-            limitCardName.textContent = cardName;
-            
-            // Get existing limits for this card (would fetch from server in real app)
-            const cardLimits = getCardLimits(cardName);
-            
-            // Populate form with existing limits
-            document.getElementById('dining-limit').value = cardLimits.dining || '';
-            document.getElementById('retail-limit').value = cardLimits.retail || '';
-            document.getElementById('travel-limit').value = cardLimits.travel || '';
-            document.getElementById('online-limit').value = cardLimits.online || '';
-            
-            // Show modal
-            spendingLimitsModal.style.display = 'block';
-        });
-    });
+    if (!cardItem || !spendingLimitsModal || !limitCardName) return;
     
-    // Card Controls - Report Lost/Stolen Card
-    const reportButtons = document.querySelectorAll('.report-btn');
+    const cardNameElement = cardItem.querySelector('h3');
+    if (!cardNameElement) return;
+    
+    const cardName = cardNameElement.textContent;
+    limitCardName.textContent = cardName;
+    
+    const diningLimit = document.getElementById('dining-limit');
+    const retailLimit = document.getElementById('retail-limit');
+    const travelLimit = document.getElementById('travel-limit');
+    const onlineLimit = document.getElementById('online-limit');
+    
+    if (diningLimit) diningLimit.value = '';
+    if (retailLimit) retailLimit.value = '';
+    if (travelLimit) travelLimit.value = '';
+    if (onlineLimit) onlineLimit.value = '';
+    
+    spendingLimitsModal.style.display = 'block';
+}
+
+function handleReportButton() {
+    const cardItem = this.closest('.card-item');
     const reportCardModal = document.getElementById('report-card-modal');
     const reportCardName = document.getElementById('report-card-name');
-    const reportCardForm = document.getElementById('report-card-form');
-    //const backButton = document.getElementById('.back-btn');
     
-    reportButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const cardItem = this.closest('.card-item');
-            const cardName = cardItem.querySelector('h3').textContent;
-            
-            // Set card name in modal
-            reportCardName.textContent = cardName;
-            
-            // Show modal
-            reportCardModal.style.display = 'block';
+    if (!cardItem || !reportCardModal || !reportCardName) return;
+    
+    const cardNameElement = cardItem.querySelector('h3');
+    if (!cardNameElement) return;
+    
+    const cardName = cardNameElement.textContent;
+    reportCardName.textContent = cardName;
+    reportCardModal.style.display = 'block';
+}
+
+function handleResolveAlert() {
+    const row = this.closest('tr');
+    if (!row || !row.cells || row.cells.length < 3) return;
+    
+    const cardName = row.cells[1].textContent;
+    
+    const resolvedButton = document.createElement('button');
+    resolvedButton.className = 'resolved-btn';
+    resolvedButton.textContent = 'Resolved';
+    resolvedButton.disabled = true;
+    
+    this.parentNode.replaceChild(resolvedButton, this);
+    
+    showToast(`Alert for ${cardName} has been resolved`);
+}
+
+function initializeBackButton() {
+    const backBtn = document.getElementById("back-btn");
+    if (backBtn) {
+        backBtn.addEventListener("click", function () {
+            window.location.href = "../Account_Dashboard/dashboard.php";
         });
-    });
+    }
+}
 
-    //back button functionality
-    // Add event listener to the back button
-    document.getElementById("back-btn").addEventListener("click", function () {
-        window.location.href = "../Account_Dashboard/dashboard.php";
-    });
-
-    
-    // Modal Close Buttons
+function initializeModals() {
     const closeButtons = document.querySelectorAll('.close-modal');
     
     closeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const modal = this.closest('.modal');
-            modal.style.display = 'none';
+            if (modal) {
+                modal.style.display = 'none';
+            }
         });
     });
     
-    // Close modals when clicking outside
     window.addEventListener('click', function(event) {
         if (event.target.classList.contains('modal')) {
             event.target.style.display = 'none';
         }
     });
+}
+
+function initializeForms() {
+    const spendingLimitsForm = document.getElementById('spending-limits-form');
+    if (spendingLimitsForm) {
+        spendingLimitsForm.addEventListener('submit', handleSpendingLimitsSubmit);
+    }
     
-    // Form Submissions
-    spendingLimitsForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const cardName = limitCardName.textContent;
-        const limits = {
-            dining: document.getElementById('dining-limit').value,
-            retail: document.getElementById('retail-limit').value,
-            travel: document.getElementById('travel-limit').value,
-            online: document.getElementById('online-limit').value
-        };
-        
-        // Send limits to server (would be implemented in real app)
-        saveCardLimits(cardName, limits);
-        
-        // Hide modal
-        spendingLimitsModal.style.display = 'none';
-        
-        // Show confirmation
-        showToast(`Spending limits for ${cardName} have been updated`);
-    });
+    const reportCardForm = document.getElementById('report-card-form');
+    if (reportCardForm) {
+        reportCardForm.addEventListener('submit', handleReportCardSubmit);
+    }
     
-    reportCardForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const cardName = reportCardName.textContent;
-        const reason = document.getElementById('report-reason').value;
-        const details = document.getElementById('report-details').value;
-        const replacement = document.getElementById('replacement').checked;
-        
-        // Send report to server (would be implemented in real app)
-        reportCard(cardName, reason, details, replacement);
-        
-        // Hide modal
-        reportCardModal.style.display = 'none';
-        
-        // Find card item and update status
-        const cardItems = document.querySelectorAll('.card-item');
-        cardItems.forEach(cardItem => {
-            const name = cardItem.querySelector('h3').textContent;
-            if (name === cardName) {
-                const cardStatus = cardItem.querySelector('.card-status');
+    const pinChangeForm = document.getElementById('pin-change-form');
+    if (pinChangeForm) {
+        pinChangeForm.addEventListener('submit', handlePinChangeSubmit);
+    }
+    
+    const alertPreferencesForm = document.getElementById('alert-preferences-form');
+    if (alertPreferencesForm) {
+        alertPreferencesForm.addEventListener('submit', handleAlertPreferencesSubmit);
+    }
+}
+
+function handleSpendingLimitsSubmit(event) {
+    event.preventDefault();
+    
+    const limitCardName = document.getElementById('limit-card-name');
+    const spendingLimitsModal = document.getElementById('spending-limits-modal');
+    
+    if (!limitCardName || !spendingLimitsModal) return;
+    
+    const cardName = limitCardName.textContent;
+    
+    spendingLimitsModal.style.display = 'none';
+    showToast(`Spending limits for ${cardName} have been updated`);
+}
+
+function handleReportCardSubmit(event) {
+    event.preventDefault();
+    
+    const reportCardName = document.getElementById('report-card-name');
+    const reportCardModal = document.getElementById('report-card-modal');
+    const reasonElement = document.getElementById('report-reason');
+    const replacementElement = document.getElementById('replacement');
+    
+    if (!reportCardName || !reportCardModal) return;
+    
+    const cardName = reportCardName.textContent;
+    const reason = reasonElement?.value || '';
+    const replacement = replacementElement?.checked || false;
+    
+    reportCardModal.style.display = 'none';
+    
+    updateReportedCardStatus(cardName);
+    
+    let message = `Your ${cardName} has been reported as ${reason}`;
+    if (replacement) {
+        message += '. A replacement card will be sent to your address on file.';
+    }
+    showToast(message);
+}
+
+function updateReportedCardStatus(cardName) {
+    const cardItems = document.querySelectorAll('.card-item');
+    cardItems.forEach(cardItem => {
+        const nameElement = cardItem.querySelector('h3');
+        if (nameElement && nameElement.textContent === cardName) {
+            const cardStatus = cardItem.querySelector('.card-status');
+            if (cardStatus) {
                 cardStatus.textContent = 'Reported';
                 cardStatus.classList.remove('active', 'frozen');
                 cardStatus.classList.add('reported');
                 cardStatus.style.backgroundColor = '#ffebee';
                 cardStatus.style.color = '#c62828';
-                
-                // Disable all buttons for this card
-                const buttons = cardItem.querySelectorAll('button');
-                buttons.forEach(button => {
-                    button.disabled = true;
-                    button.style.opacity = '0.5';
-                    button.style.cursor = 'not-allowed';
-                });
             }
-        });
-        
-        // Show confirmation
-        let message = `Your ${cardName} has been reported as ${reason}`;
-        if (replacement) {
-            message += '. A replacement card will be sent to your address on file.';
-        }
-        showToast(message);
-    });
-    
-    // PIN Changer Form
-    const pinChangeForm = document.getElementById('pin-change-form');
-    
-    pinChangeForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const cardSelect = document.getElementById('card-select');
-        const cardId = cardSelect.value;
-        const cardName = cardSelect.options[cardSelect.selectedIndex].text;
-        const currentPin = document.getElementById('current-pin').value;
-        const newPin = document.getElementById('new-pin').value;
-        const confirmPin = document.getElementById('confirm-pin').value;
-        
-        // Validate inputs
-        if (currentPin.length !== 4 || !/^\d+$/.test(currentPin)) {
-            showToast('Current PIN must be 4 digits', 'error');
-            return;
-        }
-        
-        if (newPin.length !== 4 || !/^\d+$/.test(newPin)) {
-            showToast('New PIN must be 4 digits', 'error');
-            return;
-        }
-        
-        if (newPin !== confirmPin) {
-            showToast('PINs do not match', 'error');
-            return;
-        }
-        
-        // Check if PIN is sequential
-        if (isSequential(newPin)) {
-            showToast('PIN cannot be sequential numbers', 'error');
-            return;
-        }
-        
-        // Check if PIN is four identical digits
-        if (isIdentical(newPin)) {
-            showToast('PIN cannot be four identical digits', 'error');
-            return;
-        }
-        
-        // Send to server (would be implemented in real app)
-        changePin(cardId, currentPin, newPin);
-        
-        // Reset form
-        this.reset();
-        
-        // Show confirmation
-        showToast(`PIN for ${cardName} has been changed successfully`);
-    });
-    
-    // Fraud Alerts Preferences Form
-    const alertPreferencesForm = document.getElementById('alert-preferences-form');
-    
-    alertPreferencesForm.addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        const method = document.getElementById('notification-method').value;
-        const preferences = {
-            international: document.getElementById('international-transactions').checked,
-            large: document.getElementById('large-purchases').checked,
-            online: document.getElementById('online-purchases').checked,
-            declined: document.getElementById('declined-transactions').checked,
-            gas: document.getElementById('gas-station-purchases').checked
-        };
-        
-        // Send preferences to server (would be implemented in real app)
-        saveAlertPreferences(method, preferences);
-        
-        // Show confirmation
-        showToast('Alert preferences have been updated');
-    });
-    
-    // Resolve Alert Buttons
-    const resolveButtons = document.querySelectorAll('.resolve-btn');
-    
-    resolveButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const alertDate = row.cells[0].textContent;
-            const cardName = row.cells[1].textContent;
-            const alertType = row.cells[2].textContent;
             
-            // Mark as resolved (would be implemented in real app)
-            resolveAlert(alertDate, cardName, alertType);
-            
-            // Change button to resolved
-            this.outerHTML = '<button class="resolved-btn" disabled>Resolved</button>';
-            
-            // Show confirmation
-            showToast(`Alert for ${cardName} has been resolved`);
-        });
-    });
-    
-    // Utility Functions
-    function showToast(message, type = 'success') {
-        // Create toast container if it doesn't exist
-        let toastContainer = document.querySelector('.toast-container');
-        if (!toastContainer) {
-            toastContainer = document.createElement('div');
-            toastContainer.className = 'toast-container';
-            document.body.appendChild(toastContainer);
-            
-            // Style toast container
-            toastContainer.style.position = 'fixed';
-            toastContainer.style.bottom = '20px';
-            toastContainer.style.right = '20px';
-            toastContainer.style.zIndex = '1000';
+            const buttons = cardItem.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.disabled = true;
+                button.style.opacity = '0.5';
+                button.style.cursor = 'not-allowed';
+            });
         }
+    });
+}
+
+function handlePinChangeSubmit(event) {
+    event.preventDefault();
+    
+    const cardSelect = document.getElementById('card-select');
+    const currentPinElement = document.getElementById('current-pin');
+    const newPinElement = document.getElementById('new-pin');
+    const confirmPinElement = document.getElementById('confirm-pin');
+    
+    if (!cardSelect || !currentPinElement || !newPinElement || !confirmPinElement) return;
+    
+    const cardName = cardSelect.options[cardSelect.selectedIndex]?.text || '';
+    const currentPin = currentPinElement.value;
+    const newPin = newPinElement.value;
+    const confirmPin = confirmPinElement.value;
+    
+    if (!validatePin(currentPin, 'Current PIN must be 4 digits')) return;
+    if (!validatePin(newPin, 'New PIN must be 4 digits')) return;
+    
+    if (newPin !== confirmPin) {
+        showToast('PINs do not match', 'error');
+        return;
+    }
+    
+    if (isSequential(newPin)) {
+        showToast('PIN cannot be sequential numbers', 'error');
+        return;
+    }
+    
+    if (isIdentical(newPin)) {
+        showToast('PIN cannot be four identical digits', 'error');
+        return;
+    }
+    
+    event.target.reset();
+    showToast(`PIN for ${cardName} has been changed successfully`);
+}
+
+function handleAlertPreferencesSubmit(event) {
+    event.preventDefault();
+    showToast('Alert preferences have been updated');
+}
+
+function validatePin(pin, errorMessage) {
+    if (pin.length !== 4 || !/^\d+$/.test(pin)) {
+        showToast(errorMessage, 'error');
+        return false;
+    }
+    return true;
+}
+
+function showToast(message, type = 'success') {
+    let toastContainer = document.querySelector('.toast-container');
+    if (!toastContainer) {
+        toastContainer = document.createElement('div');
+        toastContainer.className = 'toast-container';
+        toastContainer.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        `;
+        document.body.appendChild(toastContainer);
         
-        // Create toast
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.textContent = message;
-        
-        // Style toast
-        toast.style.backgroundColor = type === 'success' ? '#e8f5e9' : '#ffebee';
-        toast.style.color = type === 'success' ? '#2e7d32' : '#c62828';
-        toast.style.padding = '15px 20px';
-        toast.style.margin = '10px 0';
-        toast.style.borderRadius = '4px';
-        toast.style.boxShadow = '0 2px 5px rgba(0, 0, 0, 0.1)';
-        toast.style.fontSize = '14px';
-        toast.style.fontWeight = 'bold';
-        toast.style.animation = 'fadeIn 0.3s, fadeOut 0.3s 2.7s';
-        
-        // Add fade animations
         const style = document.createElement('style');
         style.textContent = `
             @keyframes fadeIn {
@@ -374,86 +349,49 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         `;
         document.head.appendChild(style);
-        
-        // Add toast to container
-        toastContainer.appendChild(toast);
-        
-        // Remove toast after 3 seconds
-        setTimeout(() => {
-            toast.remove();
-        }, 3000);
     }
     
-    function isSequential(pin) {
-        const digits = pin.split('').map(Number);
-        let ascending = true;
-        let descending = true;
-        
-        for (let i = 0; i < digits.length - 1; i++) {
-            if (digits[i] + 1 !== digits[i + 1]) {
-                ascending = false;
-            }
-            if (digits[i] - 1 !== digits[i + 1]) {
-                descending = false;
-            }
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    toast.style.cssText = `
+        background-color: ${type === 'success' ? '#e8f5e9' : '#ffebee'};
+        color: ${type === 'success' ? '#2e7d32' : '#c62828'};
+        padding: 15px 20px;
+        margin: 10px 0;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        font-size: 14px;
+        font-weight: bold;
+        animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+    `;
+    
+    toastContainer.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
         }
-        
-        return ascending || descending;
-    }
+    }, 3000);
+}
+
+function isSequential(pin) {
+    const digits = pin.split('').map(Number);
+    let ascending = true;
+    let descending = true;
     
-    function isIdentical(pin) {
-        return /^(\d)\1{3}$/.test(pin);
-    }
-    
-    // Mock API Functions (would connect to backend in real app)
-    function sendCardStatusToServer(cardName, status) {
-        console.log(`Sending ${status} status for ${cardName} to server...`);
-        // In a real app, this would make an AJAX request to the backend
-    }
-    
-    function getCardLimits(cardName) {
-        console.log(`Fetching spending limits for ${cardName}...`);
-        // In a real app, this would fetch data from the backend
-        // Mock data for demo purposes
-        if (cardName.includes('Visa')) {
-            return {
-                dining: 500,
-                retail: 1000,
-                travel: 2000,
-                online: 750
-            };
-        } else {
-            return {
-                dining: 300,
-                retail: 500,
-                travel: 1000,
-                online: 500
-            };
+    for (let i = 0; i < digits.length - 1; i++) {
+        if (digits[i] + 1 !== digits[i + 1]) {
+            ascending = false;
+        }
+        if (digits[i] - 1 !== digits[i + 1]) {
+            descending = false;
         }
     }
     
-    function saveCardLimits(cardName, limits) {
-        console.log(`Saving spending limits for ${cardName}:`, limits);
-        // In a real app, this would make an AJAX request to the backend
-    }
-    
-    function reportCard(cardName, reason, details, replacement) {
-        console.log(`Reporting ${cardName} as ${reason}:`, { details, replacement });
-        // In a real app, this would make an AJAX request to the backend
-    }
-    
-    function changePin(cardId, currentPin, newPin) {
-        console.log(`Changing PIN for card ${cardId}...`);
-        // In a real app, this would make an AJAX request to the backend
-    }
-    
-    function saveAlertPreferences(method, preferences) {
-        console.log(`Saving alert preferences:`, { method, preferences });
-        // In a real app, this would make an AJAX request to the backend
-    }
-    
-    function resolveAlert(date, cardName, alertType) {
-        console.log(`Resolving alert: ${date}, ${cardName}, ${alertType}`);
-        // In a real app, this would make an AJAX request to the backend
-    }
-});
+    return ascending || descending;
+}
+
+function isIdentical(pin) {
+    return /^(\d)\1{3}$/.test(pin);
+}

@@ -1,21 +1,12 @@
 <?php
-// user_functions.php - User related functions
 
-// Include config if not already included
 if (!isset($connection)) {
     require_once 'config.php';
 }
 
-/**
- * Authenticate user with email and password
- * @param string $email User's email
- * @param string $password User's password (plain text)
- * @return array Result array with success status and user data or error message
- */
 function authenticateUser($email, $password) {
     global $connection;
     
-    // Check if connection exists
     if (!$connection) {
         return [
             'success' => false,
@@ -24,7 +15,6 @@ function authenticateUser($email, $password) {
     }
     
     try {
-        // Prepare SQL statement to find user by email
         $sql = "SELECT id, firstname, lastname, email, password, nid, address, gender FROM User_Table WHERE email = ?";
         $stmt = mysqli_prepare($connection, $sql);
         
@@ -36,12 +26,10 @@ function authenticateUser($email, $password) {
             ];
         }
         
-        // Bind parameters and execute
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
         
-        // Check if user exists
         if (mysqli_num_rows($result) === 0) {
             mysqli_stmt_close($stmt);
             return [
@@ -50,14 +38,10 @@ function authenticateUser($email, $password) {
             ];
         }
         
-        // Get user data
         $user = mysqli_fetch_assoc($result);
         mysqli_stmt_close($stmt);
         
-        // Since we're storing plain text passwords, do direct comparison
-        // WARNING: This is not secure - passwords should be hashed
         if ($password === $user['password']) {
-            // Password matches - remove password from returned data for security
             unset($user['password']);
             
             return [
@@ -81,11 +65,6 @@ function authenticateUser($email, $password) {
     }
 }
 
-/**
- * Get user by ID
- * @param int $user_id User's ID
- * @return array|false User data or false if not found
- */
 function getUserById($user_id) {
     global $connection;
     
@@ -114,11 +93,6 @@ function getUserById($user_id) {
     return false;
 }
 
-/**
- * Get user by email
- * @param string $email User's email
- * @return array|false User data or false if not found
- */
 function getUserByEmail($email) {
     global $connection;
     
@@ -147,11 +121,6 @@ function getUserByEmail($email) {
     return false;
 }
 
-/**
- * Check if email exists in database
- * @param string $email Email to check
- * @return bool True if email exists, false otherwise
- */
 function emailExists($email) {
     global $connection;
     
@@ -176,12 +145,6 @@ function emailExists($email) {
     return $exists;
 }
 
-/**
- * Update user information
- * @param int $user_id User's ID
- * @param array $data Array of data to update
- * @return bool True on success, false on failure
- */
 function updateUser($user_id, $data) {
     global $connection;
     
@@ -193,7 +156,6 @@ function updateUser($user_id, $data) {
     $values = [];
     $types = "";
     
-    // Build dynamic query based on provided data
     foreach ($data as $field => $value) {
         if (in_array($field, ['firstname', 'lastname', 'email', 'address', 'gender', 'nid'])) {
             $fields[] = "$field = ?";
@@ -223,10 +185,6 @@ function updateUser($user_id, $data) {
     return $success;
 }
 
-/**
- * Get all users (for admin purposes)
- * @return array Array of all users
- */
 function getAllUsers() {
     global $connection;
     

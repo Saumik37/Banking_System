@@ -1,8 +1,5 @@
 <?php
-// test_database.php - Example of how to use the updated functions
-// Place this in your Model/ directory to test database operations
 
-// Test direct database connection and display users
 $con = mysqli_connect('127.0.0.1', 'root', '', 'webtech');
 
 if (!$con) {
@@ -11,7 +8,6 @@ if (!$con) {
 
 echo "<h2>Database Connection Test</h2>";
 
-// Test inserting a new user (only if it doesn't exist)
 $email_check = 'test@example.com';
 $sql_check = "SELECT id FROM users WHERE email = '$email_check'";
 $result_check = mysqli_query($con, $sql_check);
@@ -27,7 +23,6 @@ if (mysqli_num_rows($result_check) == 0) {
     echo "<p style='color: blue;'>ℹ Test user already exists</p>";
 }
 
-// Display all users in table format
 echo "<h3>All Users in Database:</h3>";
 $sql1 = "SELECT * FROM users ORDER BY created_at DESC";
 $result = mysqli_query($con, $sql1);
@@ -69,13 +64,10 @@ if (mysqli_num_rows($result) > 0) {
 
 mysqli_close($con);
 
-// Test using the functions
 echo "<hr><h3>Testing User Functions:</h3>";
 
-// Include the user functions
 require_once 'user_functions.php';
 
-// Test authentication
 echo "<h4>Testing Authentication:</h4>";
 $auth_result = authenticateUser('john@example.com', 'password123');
 if ($auth_result['success']) {
@@ -85,7 +77,6 @@ if ($auth_result['success']) {
     echo "<p style='color: red;'>✗ Login test failed: " . $auth_result['message'] . "</p>";
 }
 
-// Test getting user by email
 echo "<h4>Testing Get User by Email:</h4>";
 $user = getUserByEmail('jane@example.com');
 if ($user) {
@@ -94,7 +85,6 @@ if ($user) {
     echo "<p style='color: red;'>✗ User not found</p>";
 }
 
-// Test creating a new user
 echo "<h4>Testing Create User:</h4>";
 $create_result = createUser('New', 'User', '5555555555', 'newuser@test.com', 'New User Address, Sylhet', 'newpass123', 'Female');
 if ($create_result['success']) {

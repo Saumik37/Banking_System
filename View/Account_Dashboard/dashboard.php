@@ -1,12 +1,10 @@
 <?php
 session_start();
 
-// Simple check if user is logged in
 if(isset($_SESSION['status']) && $_SESSION['status'] === true){
     $user_name = $_SESSION['name'] ?? 'User';
     $user_email = $_SESSION['email'] ?? 'user@example.com';
 } else {
-    // Redirect to login if not logged in
     header('location: ../View/login.php');
     exit();
 }
@@ -21,7 +19,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
     <link rel="stylesheet" href="../../Asset/CSS/dashboard.css">
 </head>
     <body>
-        <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-logo">🏦</div>
             <div class="sidebar-menu">
@@ -46,7 +43,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                     </a>
                 </div>
                 <div class="sidebar-item">
-                    <a href="../Card_Management/card_management.html" class="card-btn">
+                    <a href="../Card_Management/card_management.php" class="card-btn">
                         <img src="https://cdn-icons-png.flaticon.com/512/6963/6963703.png" width="30" height="30" fill="currentColor" viewBox="0 0 16 16"
                         alt="card-btn"
                         onmouseover="this.style.opacity='0.5'" 
@@ -62,7 +59,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                     </a>
                 </div>
                 <div class="sidebar-item">
-                    <a href="../Security_Alerts/security-alerts.html" class="security-btn">
+                    <a href="../Security_Alerts/security-alerts.php" class="security-btn">
                     <img src="https://cdn0.iconfinder.com/data/icons/security-348/64/1_shield_warning_protected_security_alert-512.png" 
                     width="30" 
                     height="30" 
@@ -73,7 +70,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                     onmouseout="this.style.opacity='1'" />
                 </div>
 
-                <!-- Logout Button -->
                 <div class="footer">
                     <a href="../../Controller/logout.php">
                         <img src="https://cdn-icons-png.freepik.com/512/6968/6968098.png" 
@@ -89,9 +85,7 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
             <div class="header">
                 <div class="user-greeting">
                     <div class="user-avatar">
@@ -119,7 +113,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </div>
             </div>
 
-            <!-- Cards Section -->
             <div class="section-header">
                 <h2>Cards</h2>
                 <span class="see-all">See all</span>
@@ -153,8 +146,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </div>
             </div>
 
-
-            <!-- Quick Actions -->
             <div class="quick-actions">
                 <a href="../Fund_Transfer/fund_transfer.html" class="action-button">
                     <img src="https://cdn-icons-png.flaticon.com/512/3713/3713223.png" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"
@@ -192,7 +183,6 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                 </a>
             </div>
 
-            <!-- Account Tiles -->
             <div class="account-section">
                 <div class="section-header">
                     <h2>Your Accounts</h2>
@@ -203,32 +193,26 @@ if(isset($_SESSION['status']) && $_SESSION['status'] === true){
                     <div class="account-tile">
                         <div class="tile-title">Checking Account</div>
                         <div class="tile-balance">$ ----</div>
-                        <a href="../../Controller/account.php?id=1" class="tile-button">View Details</a>
                     </div>
 
                     <div class="account-tile">
                         <div class="tile-title">Savings Account</div>
                         <div class="tile-balance">$ ----</div>
-                        <a href="../../Controller/account.php?id=2" class="tile-button">View Details</a>
                     </div>
 
                     <div class="account-tile">
                         <div class="tile-title">Credit Card</div>
                         <div class="tile-balance">$ ----</div>
-                        <a href="../../Controller/account.php?id=3" class="tile-button">View Details</a>
                     </div>
 
                     <div class="account-tile">
                         <div class="tile-title">Investment Account</div>
                         <div class="tile-balance">$ ----</div>
-                        <a href="../../Controller/account.php?id=4" class="tile-button">View Details</a>
                     </div>
                 </div>
             </div>
 
-
         </div>
-        <!-- Footer -->     
         <script src="../../Asset/JS/dashboard.js"></script>
     </body>
 </html>

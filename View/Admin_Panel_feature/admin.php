@@ -1,35 +1,28 @@
 <?php
 session_start();
 
-// Check if admin is logged in - Updated to match login_process.php session variables
 if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] !== true || !isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
-    // If not logged in as admin, redirect to main login page (not login.php)
     header('Location: ../Login_page_Niloy/Login_Page.php?error=' . urlencode('Admin access required'));
     exit;
 }
 
-// Handle logout
 if (isset($_GET['logout'])) {
     session_destroy();
     header('Location: ../Login_page_Niloy/Login_Page.php');
     exit;
 }
 
-// Database connection
 $con = mysqli_connect('127.0.0.1', 'root', '', 'webtech');
 
-// Check connection
 if (!$con) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
-// Handle AJAX requests
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['login'])) {
     $action = $_POST['action'] ?? '';
     
     switch ($action) {
         case 'filter_users':
-            // Include the filter handler
             include '../../Model/admin_filter_handler.php';
             exit;
             
@@ -83,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['login'])) {
     }
 }
 
-// Initial page load - get default user list
 $page = 1;
 $limit = 10;
 $offset = 0;
@@ -91,13 +83,11 @@ $offset = 0;
 $where_conditions = [];
 $where_clause = "";
 
-// Get total count for pagination
 $count_sql = "SELECT COUNT(*) as total FROM User_Table";
 $count_result = mysqli_query($con, $count_sql);
 $total_users = mysqli_fetch_assoc($count_result)['total'];
 $total_pages = ceil($total_users / $limit);
 
-// Fetch users - initial load
 $sql = "SELECT * FROM User_Table ORDER BY id DESC LIMIT $limit OFFSET $offset";
 $result = mysqli_query($con, $sql);
 ?>
@@ -126,7 +116,6 @@ $result = mysqli_query($con, $sql);
                 <button class="btn btn-primary" onclick="openModal('userModal')">Add New User</button>
             </div>
 
-            <!-- Search/Filter Form -->
             <div class="filters-section">
                 <div class="filters-header">
                     <h3>Filter Users</h3>
@@ -160,7 +149,6 @@ $result = mysqli_query($con, $sql);
                 </form>
             </div>
 
-            <!-- Users Table Container -->
             <div id="usersTableContainer">
                 <table class="data-table" border="1">
                     <thead>
@@ -194,7 +182,6 @@ $result = mysqli_query($con, $sql);
                     </tbody>
                 </table>
 
-                <!-- Pagination -->
                 <div id="paginationContainer" class="pagination">
                     <span class="page-info">Page 1 of <?php echo $total_pages; ?> (<?php echo $total_users; ?> total users)</span>
                 </div>
@@ -202,7 +189,6 @@ $result = mysqli_query($con, $sql);
         </div>
     </div>
 
-    <!-- Add/Edit User Modal -->
     <div id="userModal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
